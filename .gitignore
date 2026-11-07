@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+mobile/node_modules/
+backend/node_modules/
+
+# Environment and sensitive files
+.env
+.env*
+*service-account*
+*firebase-service-account*
+*service-account*.json*
+*firebase-service-account*.json*
+*.pem
+*.key
+*.cert
+*.p8
+*.p12
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+database/*.sqlite
+
+# Expo & Metro
+.expo/
+mobile/.expo/
+dist/
+build/
+*.log
+
+# Android Build & Gradle
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+.gradle/
+
+# OS Files
+.DS_Store
+Thumbs.db

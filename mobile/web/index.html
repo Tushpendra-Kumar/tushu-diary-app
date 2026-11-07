@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>TushuDiary</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+    <style id="tushudiary-global-focus-reset">
+      /* Globally remove default browser white/grey focus outline & ring across all inputs */
+      input, textarea, select, [contenteditable="true"], [role="textbox"], [data-focusable="true"] {
+        outline: none !important;
+        outline-style: none !important;
+        outline-width: 0 !important;
+        outline-color: transparent !important;
+        box-shadow: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      input:focus, textarea:focus, select:focus, 
+      [contenteditable="true"]:focus, [role="textbox"]:focus, [data-focusable="true"]:focus,
+      input:focus-visible, textarea:focus-visible, select:focus-visible, 
+      [contenteditable="true"]:focus-visible, [role="textbox"]:focus-visible, [data-focusable="true"]:focus-visible,
+      input:active, textarea:active, select:active {
+        outline: none !important;
+        outline-style: none !important;
+        outline-width: 0 !important;
+        outline-color: transparent !important;
+        box-shadow: none !important;
+        -webkit-focus-ring-color: transparent !important;
+      }
+      *:focus {
+        outline: none !important;
+      }
+      *:focus-visible {
+        outline: none !important;
+      }
+    </style>
+    <link rel="icon" href="/favicon.ico"/>
+  </head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+  </body>
+</html>
