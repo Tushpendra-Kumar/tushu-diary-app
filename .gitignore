@@ -35,6 +35,8 @@ mobile/android/build/
 mobile/android/app/build/
 mobile/android/local.properties
 .gradle/
+*.apk
+*.aab
 
 # OS Files
 .DS_Store

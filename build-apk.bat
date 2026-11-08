@@ -15,6 +15,7 @@ if exist "C:\Program Files\Android\Android Studio\jbr\bin\java.exe" (
 )
 
 set "PATH=%JAVA_HOME%\bin;%PATH%"
+set "EXPO_NO_TELEMETRY=1"
 
 echo Using Java:
 java -version

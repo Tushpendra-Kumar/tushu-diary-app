@@ -9,7 +9,6 @@ import {
   ShieldCheck, ArrowLeft, Sparkles, Lock, Smartphone,
   Wallet, Cloud, PieChart, FileText, Bell, RefreshCw
 } from 'lucide-react-native';
-import * as Clipboard from 'expo-clipboard';
 import ParticleBackground from '../../../components/ParticleBackground';
 import SecurityFooter from '../../../components/SecurityFooter';
 import { C } from '../../../constants/theme';
@@ -55,14 +54,12 @@ export default function PremiumUpgradeScreen({ navigation }) {
 
   const handleCopyUpi = async () => {
     try {
-      if (Clipboard && Clipboard.setStringAsync) {
-        await Clipboard.setStringAsync(upiId);
-      } else if (Platform.OS === 'web' && navigator.clipboard) {
+      if (Platform.OS === 'web' && typeof navigator !== 'undefined' && navigator.clipboard) {
         await navigator.clipboard.writeText(upiId);
       }
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
-      Alert.alert('UPI ID Copied', `Copied "${upiId}" to clipboard. Open your UPI app and paste to pay.`);
+      Alert.alert('UPI ID', `Active UPI ID:\n\n${upiId}\n\nOpen your UPI app (PhonePe, GPay, Paytm) and pay ₹${amount} to activate Lifetime Premium.`);
     } catch (e) {
       Alert.alert('UPI ID', upiId);
     }
