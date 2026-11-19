@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { C } from '../constants/theme';
 
 const UserCard = ({ user, onPress }) => {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: C.border,
-    boxShadow: '0px 4px 5px rgba(0, 0, 0, 0.3)',
+    ...(Platform.OS === 'web' ? { boxShadow: '0px 4px 5px rgba(0, 0, 0, 0.3)' } : {}),
     elevation: 3,
   },
   avatar: {

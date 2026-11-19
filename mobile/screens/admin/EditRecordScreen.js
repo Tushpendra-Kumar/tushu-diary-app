@@ -68,7 +68,7 @@ export default function EditRecordScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   scroll: { padding: 24, paddingBottom: 48 },
   title: { fontSize: 24, fontWeight: '800', color: C.white, marginBottom: 24 },
   label: { fontSize: 11, fontWeight: '700', color: C.textSecondary, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 },

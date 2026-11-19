@@ -6,10 +6,13 @@ enableScreens(true);
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { LogBox, ActivityIndicator, View } from 'react-native';
+import { LogBox, ActivityIndicator, View, Text, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BrandLogo from './components/BrandLogo';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { AppLockProvider } from './context/AppLockContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Ignore React Native Web deprecation warnings from React Navigation
 LogBox.ignoreLogs([
@@ -91,7 +94,7 @@ function AuthStack() {
     <Stack.Navigator 
       screenOptions={{ 
         headerShown: false, 
-        contentStyle: { backgroundColor: 'transparent' },
+        contentStyle: { backgroundColor: '#06080D' },
         animation: 'slide_from_right'
       }}
     >
@@ -104,13 +107,60 @@ function AuthStack() {
 }
 
 
+class GlobalErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('[GlobalErrorBoundary] Caught unhandled React error:', error, errorInfo);
+  }
+
+  handleReset = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userData');
+    } catch (e) {}
+    this.setState({ hasError: false, error: null });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <BrandLogo size={80} style={{ marginBottom: 20 }} />
+          <Text style={{ fontSize: 22, fontWeight: '700', color: '#FFFFFF', marginBottom: 8 }}>TushuDiary</Text>
+          <Text style={{ fontSize: 14, color: '#8E8E93', textAlign: 'center', marginBottom: 24 }}>
+            Something went wrong while rendering this view.
+          </Text>
+          <TouchableOpacity
+            onPress={this.handleReset}
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: '#F0A500',
+              paddingVertical: 14,
+              paddingHorizontal: 28,
+              borderRadius: 12,
+            }}
+          >
+            <Text style={{ color: '#000000', fontWeight: '700', fontSize: 15 }}>Reset Session & Return to Login</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function AppNavigator() {
   const { user, isLoading } = useContext(AuthContext);
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#2563EB" />
+      <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#F0A500" />
       </View>
     );
   }
@@ -119,21 +169,20 @@ function AppNavigator() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: 'transparent',
+      background: '#06080D',
     },
   };
 
   return (
     <NavigationContainer theme={navTheme}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" translucent backgroundColor="transparent" />
       <Stack.Navigator 
         screenOptions={{
-          headerStyle: { backgroundColor: 'transparent' },
+          headerStyle: { backgroundColor: '#06080D' },
           headerTintColor: '#F0A500',
           headerTitleStyle: { fontWeight: '700', color: '#FFFFFF', fontSize: 16 },
           headerShadowVisible: false,
-          headerTransparent: true,
-          contentStyle: { backgroundColor: 'transparent' },
+                    contentStyle: { backgroundColor: '#06080D' },
         }}
       >
         {user == null ? (
@@ -148,15 +197,19 @@ function AppNavigator() {
 
 export default function App() {
   return (
-    <View style={{ flex: 1 }}>
-      <ParticleBackground />
-      <AuthProvider>
-        <ThemeProvider>
-          <AppLockProvider>
-            <AppNavigator />
-          </AppLockProvider>
-        </ThemeProvider>
-      </AuthProvider>
-    </View>
+    <SafeAreaProvider>
+      <GlobalErrorBoundary>
+        <View style={{ flex: 1, backgroundColor: '#06080D' }}>
+          <ParticleBackground />
+          <AuthProvider>
+            <ThemeProvider>
+              <AppLockProvider>
+                <AppNavigator />
+              </AppLockProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </View>
+      </GlobalErrorBoundary>
+    </SafeAreaProvider>
   );
 }

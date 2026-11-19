@@ -1,0 +1,98 @@
+name: Build TushuDiary APK & Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install Mobile Dependencies
+        run: |
+          cd mobile
+          npm ci || npm install --legacy-peer-deps
+
+      - name: Ensure Android Keystore
+        run: |
+          if [ ! -f mobile/android/app/codebytushu-release.keystore ]; then
+            echo "Generating release keystore for CI build..."
+            keytool -genkeypair -v \
+              -keystore mobile/android/app/codebytushu-release.keystore \
+              -alias tushudiary \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass codebytushu2026 \
+              -keypass codebytushu2026 \
+              -dname "CN=TushuDiary, OU=CodeByTushu, O=CodeByTushu, L=Delhi, S=Delhi, C=IN"
+          fi
+
+      - name: Build Android Release APK
+        run: |
+          cd mobile/android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Copy & Prepare APK
+        run: |
+          cp mobile/android/app/build/outputs/apk/release/app-release.apk TushuDiary.apk
+          ls -lh TushuDiary.apk
+
+      - name: Read Version & Metadata
+        id: meta
+        run: |
+          VERSION=$(node -p "require('./app-manifest.json').version")
+          NOTES=$(node -p "require('./app-manifest.json').notes")
+          SHORT_SHA=${GITHUB_SHA::7}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "notes=${NOTES}" >> $GITHUB_OUTPUT
+          echo "sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TushuDiary-v${{ steps.meta.outputs.version }}
+          path: TushuDiary.apk
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: "TushuDiary v${{ steps.meta.outputs.version }} (${{ steps.meta.outputs.sha }})"
+          body: |
+            ✨ **TushuDiary Automatic Cloud Build**
+
+            - **Version:** `v${{ steps.meta.outputs.version }}`
+            - **Commit:** `${{ steps.meta.outputs.sha }}`
+            - **Changes:** ${{ steps.meta.outputs.notes }}
+            - **Branding:** Golden T+D Monogram logo, Obsidian Dark theme.
+            - **Security:** Automatic Super Admin detection (`tushpendrakumar@gmail.com`), Native Google Sign-In & Email/Password Auth.
+            - **In-App Updates:** Live update detection via **Settings ➔ Check for Updates** & **Navigation Drawer**.
+
+            Download `TushuDiary.apk` below to install or update the app.
+          files: |
+            TushuDiary.apk
+            app-manifest.json

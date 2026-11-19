@@ -138,9 +138,7 @@ export default function PremiumUpgradeScreen({ navigation }) {
 
       {/* Top Header */}
       <View style={s.topBar}>
-        <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()} activeOpacity={0.7}>
-          <ArrowLeft size={20} color={C.white} />
-        </TouchableOpacity>
+        <View style={{ width: 40 }} />
         <View style={s.topBarTitles}>
           <Text style={s.headerTitle}>Lifetime Premium</Text>
           <Text style={s.headerSubtitle}>Permanent Access • ₹499 One-Time</Text>

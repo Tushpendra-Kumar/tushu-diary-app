@@ -35,8 +35,22 @@ mobile/android/build/
 mobile/android/app/build/
 mobile/android/local.properties
 .gradle/
+# Keystores & release keys
+*.jks
+*.keystore
+*.mobileprovision
+
+# Android IDE & Caches
+mobile/android/.idea/
+mobile/android/.kotlin/
+mobile/android/.cxx/
+.idea/
+.vscode/
+
+# Local APKs & Bundles
 *.apk
 *.aab
+TushuDiary.apk
 
 # OS Files
 .DS_Store

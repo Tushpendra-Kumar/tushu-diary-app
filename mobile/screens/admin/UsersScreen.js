@@ -111,12 +111,12 @@ export default function UsersScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   header: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
-    backgroundColor: 'transparent',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 16,
+    backgroundColor: '#06080D',
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
@@ -124,11 +124,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 48,
+    marginBottom: 14,
+    marginTop: 4,
     zIndex: 10,
   },
-  title: { fontSize: 28, fontWeight: '800', color: C.white, letterSpacing: -0.5, zIndex: 10 },
+  title: { fontSize: 22, fontWeight: '800', color: C.white, letterSpacing: -0.3, zIndex: 10 },
   addButton: {
     backgroundColor: 'rgba(240, 165, 0, 0.15)',
     flexDirection: 'row',

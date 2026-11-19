@@ -454,9 +454,7 @@ export default function ExportReportsScreen({ navigation }) {
     <SafeAreaView style={s.safe}>
       <ParticleBackground />
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 32 }} />
         <Text style={s.headerTitle}>Export & Reports</Text>
         <View style={{ width: 32 }} />
       </View>
@@ -566,7 +564,7 @@ export default function ExportReportsScreen({ navigation }) {
 
 const COL_W = 110;
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 14,

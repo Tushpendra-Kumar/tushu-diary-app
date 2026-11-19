@@ -76,9 +76,7 @@ export default function PersonalInfoScreen({ navigation }) {
       
       {/* Centered Header */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ArrowLeft color={C.white} size={24} />
-        </TouchableOpacity>
+        <View style={s.placeholder} />
         <Text style={s.headerTitle}>Personal Information</Text>
         <View style={s.placeholder} />
       </View>

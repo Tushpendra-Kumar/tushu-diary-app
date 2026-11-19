@@ -18,11 +18,51 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { C, inputResetStyle } from '../constants/theme';
 import ParticleBackground from '../components/ParticleBackground';
 import SecurityFooter from '../components/SecurityFooter';
+import BrandLogo from '../components/BrandLogo';
+
+// Self-contained, non-re-rendering Input Field (rock-solid focus stability)
+const FormInput = ({ 
+  label, 
+  icon, 
+  prefixIcon, 
+  value, 
+  onChangeText, 
+  placeholder, 
+  secureTextEntry, 
+  autoCapitalize, 
+  keyboardType, 
+}) => {
+  return (
+    <View style={{ width: '100%', marginBottom: 12 }}>
+      <View style={styles.labelRow}>
+        <Feather name={icon} style={styles.labelIcon} />
+        <Text style={styles.label}>{label}</Text>
+      </View>
+      <View style={styles.inputRow}>
+        <Feather name={prefixIcon || icon} style={styles.inputPrefixIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={C.textMuted}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+          autoCapitalize={autoCapitalize || 'none'}
+          keyboardType={keyboardType || 'default'}
+          autoCorrect={false}
+          spellCheck={false}
+          autoComplete="off"
+          importantForAutofill="no"
+          underlineColorAndroid="transparent"
+        />
+      </View>
+    </View>
+  );
+};
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [focusedField, setFocusedField] = useState(null);
 
   const { forgotPassword } = useContext(AuthContext);
 
@@ -72,23 +112,10 @@ export default function ForgotPasswordScreen({ navigation }) {
           keyboardShouldPersistTaps="handled" 
           showsVerticalScrollIndicator={false}
         >
-          {/* Back Button */}
-          <TouchableOpacity 
-            onPress={() => navigation.goBack()} 
-            style={styles.backBtn}
-            activeOpacity={0.8}
-          >
-            <Feather name="chevron-left" size={24} color={C.gold} />
-          </TouchableOpacity>
-
           {/* Unified Auth Card */}
           <View style={styles.card}>
-            {/* Logo / Key Icon */}
-            <View style={styles.logoOuterRing}>
-              <View style={styles.logoInnerRing}>
-                <Feather name="key" size={28} color={C.gold} />
-              </View>
-            </View>
+            {/* Brand Monogram T+D */}
+            <BrandLogo size={74} style={{ marginBottom: 12, alignSelf: 'center' }} />
 
             {/* Title & Subtitle */}
             <Text style={styles.title}>Forgot Password</Text>
@@ -104,26 +131,16 @@ export default function ForgotPasswordScreen({ navigation }) {
             {/* Form */}
             <View style={styles.form}>
               {/* Email Address */}
-              <View style={styles.labelRow}>
-                <Feather name="mail" style={styles.labelIcon} />
-                <Text style={styles.label}>Email ID *</Text>
-              </View>
-              <View style={[styles.inputRow, focusedField === 'email' && styles.inputRowFocused]}>
-                <Feather name="at-sign" style={styles.inputPrefixIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="name@example.com"
-                  placeholderTextColor={C.textMuted}
-                  value={email}
-                  onChangeText={setEmail}
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  underlineColorAndroid="transparent"
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
+              <FormInput
+                label="Email ID *"
+                icon="mail"
+                prefixIcon="at-sign"
+                placeholder="name@example.com"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
 
               {/* Submit Button */}
               <TouchableOpacity
@@ -163,7 +180,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#06080D',
   },
   kav: {
     flex: 1,
@@ -171,10 +188,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 10 : 16,
-    paddingBottom: 20,
+    paddingTop: Platform.OS === 'ios' ? 10 : 20,
+    paddingBottom: 40,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   backBtn: {
     width: 42,
@@ -280,18 +296,17 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
     borderRadius: 14,
-    borderWidth: 1.2,
-    borderColor: 'rgba(240, 165, 0, 0.22)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(240, 165, 0, 0.38)',
     marginBottom: 14,
     paddingHorizontal: 14,
-    height: 46,
+    height: 48,
   },
   inputRowFocused: {
     borderColor: C.gold,
     backgroundColor: 'rgba(0,0,0,0.75)',
-    elevation: 3,
   },
   inputPrefixIcon: {
     fontSize: 16,

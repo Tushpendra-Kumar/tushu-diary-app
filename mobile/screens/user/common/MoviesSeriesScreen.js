@@ -366,9 +366,7 @@ export default function MoviesSeriesScreen({ navigation }) {
 
       {/* Top Header */}
       <View style={s.header}>
-        <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()} activeOpacity={0.7}>
-          <ChevronLeft color={C.white} size={22} />
-        </TouchableOpacity>
+        <View style={{ width: 38 }} />
         <View style={s.headerTitleWrap}>
           <Text style={s.headerTitle}>Movies & Series</Text>
           <Text style={s.headerSubtitle}>Personal Watchlist & Entertainment Tracker</Text>
@@ -1151,7 +1149,7 @@ export default function MoviesSeriesScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,

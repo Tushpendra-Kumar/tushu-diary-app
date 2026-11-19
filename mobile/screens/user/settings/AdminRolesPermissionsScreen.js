@@ -53,7 +53,7 @@ export default function AdminRolesPermissionsScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: C.border || '#333' },
   backBtn: { padding: 4 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: C.white, marginLeft: 16 },

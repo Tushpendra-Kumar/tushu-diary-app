@@ -88,7 +88,7 @@ export default function UserRecordsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   header: {
     padding: 24, backgroundColor: 'transparent',
     borderBottomWidth: 1, borderBottomColor: C.border, alignItems: 'center',

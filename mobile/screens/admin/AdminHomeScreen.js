@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, useWindowDimensions, Platform } from 'react-native';
 import ParticleBackground from '../../components/ParticleBackground';
-import { ChevronRight, FolderGit2, FileText, Users, MessageSquare, ShieldCheck, Sparkles, CreditCard } from 'lucide-react-native';
+import { ChevronRight, FolderGit2, FileText, Users, MessageSquare, ShieldCheck, Sparkles, CreditCard, RefreshCw } from 'lucide-react-native';
 import Svg, { Defs, LinearGradient, Stop, Rect, Path } from 'react-native-svg';
 import { APP_MODULES } from '../../config/modulesConfig';
 import { C } from '../../constants/theme';
@@ -71,6 +72,7 @@ const ModuleCard = ({ icon: Icon, title, sub, color, onPress, cardWidth }) => (
 );
 
 export default function AdminHomeScreen({ navigation }) {
+  const { switchMode } = useContext(AuthContext);
   const { width: screenWidth } = useWindowDimensions();
   
   // 2-column responsive layout with 16px screen padding and 12px card gap
@@ -263,7 +265,7 @@ export default function AdminHomeScreen({ navigation }) {
 const s = StyleSheet.create({
   safe: { 
     flex: 1, 
-    backgroundColor: 'transparent',
+    backgroundColor: '#06080D',
   },
   scroll: { 
     paddingTop: 16, 
@@ -271,6 +273,23 @@ const s = StyleSheet.create({
   },
 
   // ── Admin Header Block ──
+  switchBackUserBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FBBF24',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginTop: 14,
+    gap: 8,
+  },
+  switchBackUserText: {
+    color: '#000000',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0.3,
+  },
   adminHeaderBlock: {
     paddingHorizontal: 16,
     marginBottom: 16,

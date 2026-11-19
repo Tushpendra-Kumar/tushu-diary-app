@@ -34,35 +34,21 @@ export const requestNotificationPermission = async () => {
     console.warn('Notification permission error', e);
     return false;
   }
-
-  // Khata Sync
-  const allKhata = await dataService.getKhataContacts(userId);
-  if (settings.khataReminders) {
-    allKhata.forEach(k => scheduleKhataReminders(k));
-  } else {
-    allKhata.forEach(k => cancelKhataReminders(k.id));
-  }
-
-  };
+};
 
 const cancelPrefix = async (prefix) => {
   if (Platform.OS === 'web') return;
-  const all = await Notifications.getAllScheduledNotificationsAsync();
-  for (const notif of all) {
-    if (notif.identifier.startsWith(prefix)) {
-      await Notifications.cancelScheduledNotificationAsync(notif.identifier);
+  try {
+    const all = await Notifications.getAllScheduledNotificationsAsync();
+    for (const notif of all) {
+      if (notif.identifier && notif.identifier.startsWith(prefix)) {
+        await Notifications.cancelScheduledNotificationAsync(notif.identifier);
+      }
     }
+  } catch (e) {
+    console.warn('Error cancelling prefix notifications', prefix, e);
   }
-
-  // Khata Sync
-  const allKhata = await dataService.getKhataContacts(userId);
-  if (settings.khataReminders) {
-    allKhata.forEach(k => scheduleKhataReminders(k));
-  } else {
-    allKhata.forEach(k => cancelKhataReminders(k.id));
-  }
-
-  };
+};
 
 const scheduleNotif = async (id, title, body, dateObj) => {
   if (Platform.OS === 'web' || !dateObj || isNaN(dateObj.getTime())) return;
@@ -74,16 +60,7 @@ const scheduleNotif = async (id, title, body, dateObj) => {
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: dateObj },
     });
   } catch (e) { console.warn('Failed scheduling', id, e); }
-
-  // Khata Sync
-  const allKhata = await dataService.getKhataContacts(userId);
-  if (settings.khataReminders) {
-    allKhata.forEach(k => scheduleKhataReminders(k));
-  } else {
-    allKhata.forEach(k => cancelKhataReminders(k.id));
-  }
-
-  };
+};
 
 export const cancelTaskReminders = (taskId) => cancelPrefix(`task_${taskId}_`);
 export const cancelBirthdayReminders = (birthdayId) => cancelPrefix(`birthday_${birthdayId}_`);
@@ -161,40 +138,50 @@ export const scheduleExpenseReminders = async (expense) => {
 };
 
 
-export const cancelKhataReminders = (contactId) => cancelPrefix(`khata_${contactId}_`);
+export const cancelKhataReminders = (contactId) => {
+  if (!contactId) return;
+  return cancelPrefix(`khata_${contactId}_`);
+};
 
 export const scheduleKhataReminders = async (contact) => {
-  await cancelKhataReminders(contact.id);
-  
-  // Calculate balance
-  let balance = 0;
-  for (const e of contact.entries) {
-    balance += e.type === 'gave' ? -e.amount : e.amount;
+  try {
+    if (!contact || !contact.id) return;
+    await cancelKhataReminders(contact.id);
+    if (!Array.isArray(contact.entries) || contact.entries.length === 0) return;
+    
+    // Calculate balance
+    let balance = 0;
+    for (const e of contact.entries) {
+      if (!e) continue;
+      const amt = Number(e.amount) || 0;
+      balance += e.type === 'gave' ? -amt : amt;
+    }
+    
+    // If they owe us (balance < 0), schedule a reminder 30 days after the last transaction
+    if (balance >= 0) return; 
+    
+    // Get latest transaction date
+    const latestDateStr = contact.entries[0]?.date;
+    if (!latestDateStr) return;
+    
+    let latestDate = new Date(latestDateStr);
+    if (isNaN(latestDate.getTime())) return;
+    
+    // Set due date to 30 days after latest transaction
+    const due = new Date(latestDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    due.setHours(10, 0, 0, 0);
+
+    const title = "Khata Reminder";
+    const name = contact.name || 'Contact';
+    
+    const _7d = new Date(due.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const _24h = new Date(due.getTime() - 24 * 60 * 60 * 1000);
+
+    await scheduleNotif(`khata_${contact.id}_7d`, title, `Collect dues from ${name} in 7 days.`, _7d);
+    await scheduleNotif(`khata_${contact.id}_24h`, title, `Collect dues from ${name} tomorrow.`, _24h);
+  } catch (err) {
+    console.warn('[notificationService] scheduleKhataReminders error:', err);
   }
-  
-  // If they owe us (balance < 0), schedule a reminder 30 days after the last transaction
-  if (balance >= 0) return; 
-  if (contact.entries.length === 0) return;
-  
-  // Get latest transaction date
-  const latestDateStr = contact.entries[0].date;
-  if (!latestDateStr) return;
-  
-  let latestDate = new Date(latestDateStr);
-  if (isNaN(latestDate.getTime())) return;
-  
-  // Set due date to 30 days after latest transaction
-  const due = new Date(latestDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-  due.setHours(10, 0, 0, 0);
-
-  const title = "Khata Reminder";
-  const name = contact.name;
-  
-  const _7d = new Date(due.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const _24h = new Date(due.getTime() - 24 * 60 * 60 * 1000);
-
-  await scheduleNotif(`khata_${contact.id}_7d`, title, `Collect dues from ${name} in 7 days.`, _7d);
-  await scheduleNotif(`khata_${contact.id}_24h`, title, `Collect dues from ${name} tomorrow.`, _24h);
 };
 
 
@@ -289,8 +276,7 @@ export const scheduleFamilyEventReminders = async (event, settings) => {
   if (settings.oneHourBefore && _1h.getTime() > Date.now()) {
     await scheduleNotif(`famevent_${event.id}_1h`, title, `"${name}" is starting in 1 hour!`, _1h);
   }
-
-  };
+};
 
 export const syncFamilyEventsNotifications = async (userId, newSettings = null) => {
   if (Platform.OS === 'web') return;
@@ -301,8 +287,6 @@ export const syncFamilyEventsNotifications = async (userId, newSettings = null) 
     settings = saved ? JSON.parse(saved) : { sevenDaysBefore: true, oneDayBefore: true, morningOfEvent: true, oneHourBefore: false };
   }
   
-  // Note: requiring dataService here dynamically to avoid circular dependency if needed, 
-  // but assuming dataService is passed in initializeNotifications, we'll fetch directly from AsyncStorage here for safety.
   try {
     const rawEvents = await AsyncStorage.getItem('tushu_shared_fam_events');
     const events = rawEvents ? JSON.parse(rawEvents) : [];
@@ -313,8 +297,7 @@ export const syncFamilyEventsNotifications = async (userId, newSettings = null) 
   } catch (e) {
     console.log("Failed to sync family events", e);
   }
-
-  };
+};
 
 export const initializeNotifications = async (userId, dataService) => {
   if (Platform.OS === 'web') return;

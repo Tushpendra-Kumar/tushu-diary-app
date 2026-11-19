@@ -319,9 +319,7 @@ export default function AdvancedWebsiteManagerScreen({ navigation }) {
 
       {/* HEADER */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 28 }} />
         <Text style={s.headerTitle}>Website & Link Manager</Text>
         <TouchableOpacity style={s.addIconBtn} onPress={() => { setEditing(null); setModalVisible(true); }}>
           <Plus color={C.gold} size={24} />
@@ -433,7 +431,7 @@ export default function AdvancedWebsiteManagerScreen({ navigation }) {
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 14,

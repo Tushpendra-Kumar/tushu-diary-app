@@ -2,12 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, Modal, Animated, Dimensions,
   TouchableWithoutFeedback, TouchableOpacity, Image as RNImage,
-  SafeAreaView, ScrollView, Platform,
+  ScrollView, Platform, StatusBar,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   X, Home, Users, CheckSquare, Wallet, Calendar, BookOpen,
-  User, Settings, LogOut, ChevronRight, Shield, LayoutDashboard, UserCog,
+  User, Settings, LogOut, ChevronRight, Shield, LayoutDashboard, UserCog, Sparkles, RefreshCw, DownloadCloud
 } from 'lucide-react-native';
+import { checkForAppUpdates } from '../services/updateService';
 import { C } from '../constants/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -74,7 +76,7 @@ function LogoutCard({ onPress }) {
 
 export default function NavigationDrawer({
   visible, onClose, dpUri, initials, displayName, userId,
-  accentColor, onLogout, navigation, isAdmin,
+  accentColor, onLogout, navigation, isAdmin, isSuper, currentMode, onSwitchMode,
 }) {
   const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
@@ -110,6 +112,10 @@ export default function NavigationDrawer({
     }
   };
 
+  const insets = useSafeAreaInsets();
+  const topInset = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 28) : 0);
+  const bottomInset = Math.max(insets.bottom, 16);
+
   const ringColor = 'rgba(240, 165, 0, 0.65)';
 
   const backdropOpacity = backdropAnim.interpolate({
@@ -129,8 +135,8 @@ export default function NavigationDrawer({
         <Animated.View style={[s.panel, { transform: [{ translateX: slideAnim }] }]}>
           <View style={s.glowEdge} />
 
-          <SafeAreaView style={{ flex: 1 }}>
-            <View style={s.header}>
+          <View style={{ flex: 1 }}>
+            <View style={[s.header, { paddingTop: topInset + 12 }]}>
               <View style={s.avatarRow}>
                 {dpUri ? (
                   <RNImage source={{ uri: dpUri }} style={[s.avatarImage, { borderColor: ringColor }]} />
@@ -162,9 +168,10 @@ export default function NavigationDrawer({
               <DrawerItem icon={CheckSquare} label="Tasks"    color="#F472B6" isActive={isItemActive('Tasks')}    onPress={() => go('TaskManager')} />
               <DrawerItem icon={Wallet}      label="Expenses" color="#38BDF8" isActive={isItemActive('Expenses')} onPress={() => go('ExpenseTracker')} />
               <DrawerItem icon={Calendar}    label="Calendar" color="#FBBF24" isActive={isItemActive('Calendar')} onPress={() => go('FamilyEvents')} />
-              <DrawerItem icon={BookOpen}    label="Memories" color="#A78BFA" isActive={isItemActive('Memories')} onPress={() => go('QuickNotes')} />
-              <DrawerItem icon={User}        label="Profile"  color="#60A5FA" isActive={isItemActive('Profile')}  onPress={() => go('ProfileTab')} />
-              <DrawerItem icon={Settings}    label="Settings" color="#94A3B8" isActive={isItemActive('Settings')} onPress={() => go(['ProfileTab', { screen: 'Settings' }])} />
+              <DrawerItem icon={BookOpen}      label="Memories"      color="#A78BFA" isActive={isItemActive('Memories')} onPress={() => go('QuickNotes')} />
+              <DrawerItem icon={User}          label="Profile"       color="#60A5FA" isActive={isItemActive('Profile')}  onPress={() => go('ProfileTab')} />
+              <DrawerItem icon={DownloadCloud} label="Check Updates" color="#38BDF8" isActive={false} onPress={() => { onClose(); setTimeout(() => checkForAppUpdates({ showAlert: true }), 350); }} />
+              <DrawerItem icon={Settings}      label="Settings"      color="#94A3B8" isActive={isItemActive('Settings')} onPress={() => go(['ProfileTab', { screen: 'Settings' }])} />
 
               {isAdmin && (
                 <View style={s.adminSection}>
@@ -181,11 +188,11 @@ export default function NavigationDrawer({
               )}
             </ScrollView>
 
-            <View style={s.logoutArea}>
+            <View style={[s.logoutArea, { paddingBottom: bottomInset }]}>
               <View style={s.logoutDivider} />
               <LogoutCard onPress={onLogout} />
             </View>
-          </SafeAreaView>
+          </View>
         </Animated.View>
       </View>
     </Modal>
@@ -199,14 +206,14 @@ const s = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: '#0C0D10',
+    backgroundColor: 'rgba(10, 14, 23, 0.96)',
     elevation: 20,
     shadowColor: '#000',
     shadowOffset: { width: 8, height: 0 },
     shadowOpacity: 0.65,
     shadowRadius: 20,
     borderRightWidth: 1,
-    borderRightColor: 'rgba(240, 165, 0, 0.22)',
+    borderRightColor: 'rgba(255, 255, 255, 0.08)',
   },
   glowEdge: {
     position: 'absolute',

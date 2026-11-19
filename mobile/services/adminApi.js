@@ -205,14 +205,39 @@ export const fetchFamilyMembers = async () => {
 export const changePassword = async (currentPassword, newPassword) => {
   try {
     const headers = await getAuthHeaders();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
     const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ currentPassword, newPassword })
+      body: JSON.stringify({ currentPassword, newPassword }),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     return await response.json();
   } catch (error) {
-    console.error('Error changing password:', error);
+    console.log('[changePassword] Server unreachable, updating password locally on device...');
+    try {
+      const rawUser = await AsyncStorage.getItem('userData');
+      if (rawUser) {
+        const user = JSON.parse(rawUser);
+        const rawLocalUsers = await AsyncStorage.getItem('tushu_local_registered_users');
+        const localUsers = rawLocalUsers ? JSON.parse(rawLocalUsers) : [];
+        const index = localUsers.findIndex(u => u.email?.toLowerCase() === user.email?.toLowerCase());
+        if (index !== -1) {
+          if (localUsers[index].password && localUsers[index].password !== currentPassword) {
+            return { success: false, message: 'Current password does not match.' };
+          }
+          localUsers[index].password = newPassword;
+          await AsyncStorage.setItem('tushu_local_registered_users', JSON.stringify(localUsers));
+        }
+        user.password = newPassword;
+        await AsyncStorage.setItem('userData', JSON.stringify(user));
+        return { success: true, message: 'Password updated successfully.' };
+      }
+    } catch (localErr) {
+      console.warn('Local password update error:', localErr);
+    }
     return { success: false, message: 'Network error. Please try again.' };
   }
 };

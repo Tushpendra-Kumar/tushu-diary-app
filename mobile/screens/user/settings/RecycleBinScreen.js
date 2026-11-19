@@ -141,7 +141,7 @@ export default function RecycleBinScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   headerContainer: { padding: 20, paddingBottom: 10 },
   subText: { color: C.textSecondary, fontSize: 13, lineHeight: 18 },
   list: { padding: 20 },

@@ -134,9 +134,7 @@ export default function AdvancedSearchScreen({ navigation }) {
 
       {/* HEADER */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 32 }} />
         <Text style={s.headerTitle}>Advanced Search</Text>
         <View style={{ width: 32 }} />
       </View>
@@ -271,7 +269,7 @@ const injectedStyles = `
 `;
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
 
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',

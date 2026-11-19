@@ -7,6 +7,7 @@ import { C } from '../../constants/theme';
 export default function RecordDetailsScreen({ route, navigation }) {
   const { recordId } = route.params;
   const [record, setRecord] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -86,7 +87,7 @@ export default function RecordDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' },
   amountHero: {
     alignItems: 'center', padding: 32, paddingTop: 24,

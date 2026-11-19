@@ -79,9 +79,7 @@ export default function PremiumPersonalizationScreen({ navigation }) {
       {!prefs.reduceEffects && <ParticleBackground />}
 
       <View style={s.header(T)}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft color={T.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 32 }} />
         <Text style={s.headerTitle(T)}>Premium Personalization</Text>
         <View style={{ width: 32 }} />
       </View>

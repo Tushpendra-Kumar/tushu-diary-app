@@ -8,7 +8,7 @@ import SecurityFooter from '../../../components/SecurityFooter';
 import { C } from '../../../constants/theme';
 import { useThemeVersion } from '../../../context/ThemeContext';
 
-import { Camera, Edit2, ChevronRight, User, Shield, Image as ImageIcon, LogOut, Users, FolderGit2 } from 'lucide-react-native';
+import { Camera, Edit2, ChevronRight, User, Shield, Image as ImageIcon, LogOut, Users, FolderGit2, Sparkles, RefreshCw } from 'lucide-react-native';
 import ParticleBackground from '../../../components/ParticleBackground';
 
 const MenuItemRow = ({ icon: Icon, title, description, color = C.gold, onPress }) => (
@@ -26,13 +26,10 @@ const MenuItemRow = ({ icon: Icon, title, description, color = C.gold, onPress }
 
 export default function ProfileScreen() {
   useThemeVersion(); // Re-renders on accent/theme changes
-  const { user, logout, updateUserProfile } = useContext(AuthContext);
+  const { user, logout, updateUserProfile, currentMode, switchMode } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  const isAdmin = user?.role === 'ADMIN' && (
-    (user?.email && user.email.toLowerCase().trim() === 'tushpendrakumar@gmail.com') ||
-    (user?.user_id && user.user_id.toLowerCase().trim() === 'tushpendrakumar')
-  );
+  const isSuper = (user?.email && user.email.toLowerCase().trim() === 'tushpendrakumar@gmail.com');
 
   const userId = user?.user_id;
   const isLady = user?.gender === 'female';
@@ -170,26 +167,38 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* ────────── ADMINISTRATOR CONTROLS (ADMIN ONLY) ────────── */}
-        {isAdmin && (
+        {/* ────────── SUPER ADMIN CONTROLS (FOUNDER ONLY) ────────── */}
+        {isSuper && (
           <View style={s.menuGroup}>
-            <Text style={s.sectionTitle}>ADMINISTRATOR CONTROL</Text>
+            <Text style={s.sectionTitle}>SUPER ADMIN CONTROLS</Text>
             <View style={s.menuCard}>
               <MenuItemRow
-                icon={FolderGit2}
-                title="Files & Documentation Hub"
-                description="Manage, read & edit 19 reports and specs"
-                color={C.gold}
-                onPress={() => navigation.navigate('AdminDocsManager')}
+                icon={currentMode === 'ADMIN' ? RefreshCw : Sparkles}
+                title={currentMode === 'ADMIN' ? 'Switch to Normal User Mode' : 'Switch to Admin Portal'}
+                description={currentMode === 'ADMIN' ? 'Current: Admin Portal Mode' : 'Current: User Mode (Normal View)'}
+                color="#FBBF24"
+                onPress={() => switchMode(currentMode === 'ADMIN' ? 'USER' : 'ADMIN')}
               />
-              <View style={s.menuDivider} />
-              <MenuItemRow
-                icon={Users}
-                title="User Management"
-                description="Manage registered users & access"
-                color="#34D399"
-                onPress={() => navigation.navigate('AdminUserManagement')}
-              />
+              {currentMode === 'ADMIN' && (
+                <>
+                  <View style={s.menuDivider} />
+                  <MenuItemRow
+                    icon={FolderGit2}
+                    title="Files & Documentation Hub"
+                    description="Manage, read & edit 19 reports and specs"
+                    color={C.gold}
+                    onPress={() => navigation.navigate('AdminDocsManager')}
+                  />
+                  <View style={s.menuDivider} />
+                  <MenuItemRow
+                    icon={Users}
+                    title="User Management"
+                    description="Manage registered users & access"
+                    color="#34D399"
+                    onPress={() => navigation.navigate('AdminUserManagement')}
+                  />
+                </>
+              )}
             </View>
           </View>
         )}
@@ -247,7 +256,7 @@ export default function ProfileScreen() {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   scroll: { paddingBottom: 32 },
 
   // ── Profile Hero Section ──

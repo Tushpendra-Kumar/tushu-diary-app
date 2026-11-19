@@ -109,7 +109,7 @@ export default function MediaVaultScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ParticleBackground />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}><Text style={{color: C.gold, fontSize: 16}}> Back</Text></TouchableOpacity>
+        <View style={{width: 40}} />
         <Text style={styles.headerTitle}>Media Vault</Text>
         <View style={{width: 40}} />
       </View>
@@ -168,7 +168,7 @@ export default function MediaVaultScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16 },
   headerTitle: { color: C.white, fontSize: 18, fontWeight: 'bold' },
   tabContainer: { marginVertical: 10, height: 40 },

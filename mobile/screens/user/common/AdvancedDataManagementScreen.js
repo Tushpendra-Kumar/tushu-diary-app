@@ -11,7 +11,7 @@ import { C } from '../../../constants/theme';
 import {
   ChevronLeft, Database, Download, Upload, Trash2,
   ChevronRight, Search, FileText, CheckCircle, AlertTriangle,
-  Clock, Shield, Settings, Server, RefreshCw
+  Clock, Shield, Settings, Server, RefreshCw, X
 } from 'lucide-react-native';
 import { AuthContext } from '../../../context/AuthContext';
 import ParticleBackground from '../../../components/ParticleBackground';
@@ -398,7 +398,7 @@ export default function AdvancedDataManagementScreen({ navigation }) {
       <ParticleBackground />
 
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}><ChevronLeft color={C.white} size={28} /></TouchableOpacity>
+        <View style={{ width: 28 }} />
         <Text style={s.headerTitle}>Data Management</Text>
         <TouchableOpacity onPress={loadAll} style={s.refreshBtn}><RefreshCw color={C.gold} size={20} /></TouchableOpacity>
       </View>
@@ -472,7 +472,7 @@ export default function AdvancedDataManagementScreen({ navigation }) {
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: C.border, backgroundColor: 'rgba(5,5,5,0.9)' },
   headerTitle: { fontSize: 16, fontWeight: '700', color: C.white },
   backBtn: { padding: 4 }, refreshBtn: { padding: 4 },

@@ -34,13 +34,15 @@ export const C = {
   __density: 1.0,     // Compact=0.75, Comfortable=1.0, Spacious=1.3
 };
 
+import { Platform } from 'react-native';
+
 // ── Global Input Reset for React Native Web & Native ─────────────────────────
-export const inputResetStyle = {
+export const inputResetStyle = Platform.OS === 'web' ? {
   outlineStyle: 'none',
   outlineWidth: 0,
   outlineColor: 'transparent',
   boxShadow: 'none',
-};
+} : {};
 
 // ── Light theme token overrides ────────────────────────────────────────────────
 // Placeholder values — exact values to be provided by user in next task.

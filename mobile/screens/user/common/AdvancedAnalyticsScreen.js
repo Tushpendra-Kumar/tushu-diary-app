@@ -178,7 +178,7 @@ export default function AdvancedAnalyticsScreen({ navigation }) {
     <SafeAreaView style={s.safe}>
       <ParticleBackground/>
       <View style={s.header}>
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={s.backBtn}><ChevronLeft color={C.white} size={28}/></TouchableOpacity>
+        <View style={{width:32}}/>
         <Text style={s.headerTitle}>Advanced Analytics</Text>
         <View style={{width:32}}/>
       </View>
@@ -200,7 +200,7 @@ export default function AdvancedAnalyticsScreen({ navigation }) {
 
       {/* HEADER */}
       <View style={s.header}>
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={s.backBtn}><ChevronLeft color={C.white} size={28}/></TouchableOpacity>
+        <View style={{width:32}}/>
         <Text style={s.headerTitle}>Advanced Analytics</Text>
         <View style={{width:32}}/>
       </View>
@@ -468,7 +468,7 @@ export default function AdvancedAnalyticsScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe:{flex:1,backgroundColor:'transparent'},
+  safe:{flex:1,backgroundColor:'#06080D'},
   header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:16,paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.border,backgroundColor:'rgba(5,5,5,0.9)'},
   headerTitle:{fontSize:18,fontWeight:'700',color:C.white},
   backBtn:{padding:4},

@@ -1,11 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import { useThemeVersion } from '../context/ThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import * as notifService from '../services/notificationService';
 import * as dataService from '../services/personalDataService';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { C } from '../constants/theme';
 import { Home, Users, UserRound, Gem } from 'lucide-react-native';
@@ -101,12 +102,12 @@ import AdminBackupRestoreScreen from '../screens/user/settings/AdminBackupRestor
 import AdminMessagesScreen from '../screens/user/settings/AdminMessagesScreen';
 import AdminDocsManagerScreen from '../screens/admin/AdminDocsManagerScreen';
 import AdminPaymentsScreen from '../screens/admin/AdminPaymentsScreen';
+import AdminActivityLogsScreen from '../screens/user/settings/AdminActivityLogsScreen';
 
 const isSuperAdmin = (u) => {
-  if (!u || u.role !== 'ADMIN') return false;
+  if (!u) return false;
   const email = (u.email || '').toLowerCase().trim();
-  const userId = (u.user_id || '').toLowerCase().trim();
-  return email === 'tushpendrakumar@gmail.com' || userId === 'tushpendrakumar';
+  return email === 'tushpendrakumar@gmail.com';
 };
 
 const Tab = createBottomTabNavigator();
@@ -118,15 +119,15 @@ const stackOpts = {
     const isMain = !back;
     return <AppHeader navigation={navigation} title={title} isMain={isMain} back={back} />;
   },
-  contentStyle: { backgroundColor: 'transparent' },
+  contentStyle: { backgroundColor: '#06080D' },
 };
 
 // ─── HOME STACK ──────────────────────────────────────────────────────────────
 function HomeStack() {
   const { user } = React.useContext(AuthContext);
-  const isAdmin = isSuperAdmin(user);
-  const HomeScreen = isAdmin ? AdminHomeScreen : PublicHomeScreen;
-  const homeTitle = isAdmin ? 'Admin Portal' : 'Home';
+  const isSuper = isSuperAdmin(user);
+  const HomeScreen = isSuper ? AdminHomeScreen : PublicHomeScreen;
+  const homeTitle = isSuper ? 'Admin Portal' : 'Home';
 
   return (
     <Stack.Navigator screenOptions={stackOpts}>
@@ -212,10 +213,10 @@ function HomeStack() {
 // ─── FAMILY STACK ─────────────────────────────────────────────────────────────
 function FamilyStack() {
   const { user } = React.useContext(AuthContext);
-  const isAdmin = isSuperAdmin(user);
+  const isSuper = isSuperAdmin(user);
   return (
     <Stack.Navigator screenOptions={stackOpts}>
-      <Stack.Screen name="FamilyMain" component={FamilyScreen} options={{ title: isAdmin ? 'Admin Workplace' : 'Premium' }} />
+      <Stack.Screen name="FamilyMain" component={FamilyScreen} options={{ title: isSuper ? 'Admin Workplace' : 'Premium' }} />
 
       <Stack.Screen name="BirthdayReminder" component={BirthdayReminderScreen} options={{ title: 'Birthdays' }} />
       <Stack.Screen name="FamilyEvents" component={FamilyEventsScreen} options={{ title: 'Family Events' }} />
@@ -297,19 +298,20 @@ function ProfileStack() {
 const TabIcon = ({ Icon, label, focused }) => (
   <View style={tabStyles.iconWrap}>
     <Icon 
-      size={22} 
-      color={focused ? '#F59E0B' : '#64748B'} 
-      strokeWidth={focused ? 2.4 : 2.0}
+      size={21} 
+      color={focused ? '#F59E0B' : '#718096'} 
+      strokeWidth={focused ? 2.3 : 1.9}
     />
     <Text 
       style={[
         tabStyles.label, 
         { 
-          color: focused ? '#F59E0B' : '#64748B', 
+          color: focused ? '#F59E0B' : '#718096', 
           fontWeight: focused ? '700' : '500' 
         }
       ]} 
       numberOfLines={1}
+      ellipsizeMode="clip"
     >
       {label}
     </Text>
@@ -324,8 +326,12 @@ const TabIcon = ({ Icon, label, focused }) => (
 
 // ─── MAIN TAB NAVIGATOR ───────────────────────────────────────────────────────
 export default function UserTabNavigator() {
-  const { user } = useContext(AuthContext);
-  const isAdmin = isSuperAdmin(user);
+  const { user, currentMode } = useContext(AuthContext);
+  const isSuper = isSuperAdmin(user);
+  const insets = useSafeAreaInsets();
+  const bottomInset = insets.bottom > 0 ? insets.bottom : 8;
+  const tabHeight = 58 + bottomInset;
+
   // Subscribe to theme version — re-renders tab bar when accent/theme changes
   useThemeVersion();
 
@@ -336,9 +342,21 @@ export default function UserTabNavigator() {
   }, [user?.user_id]);
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false, tabBarStyle: tabStyles.tabBar, tabBarShowLabel: false }}>
+    <Tab.Navigator 
+      screenOptions={{ 
+        headerShown: false, 
+        tabBarStyle: [
+          tabStyles.tabBar, 
+          { 
+            height: tabHeight, 
+            paddingBottom: bottomInset,
+          }
+        ], 
+        tabBarShowLabel: false 
+      }}
+    >
       <Tab.Screen name="HomeTab" component={HomeStack} options={{ tabBarIcon: ({ focused }) => <TabIcon Icon={Home} label="Home" focused={focused} /> }} />
-      <Tab.Screen name="FamilyTab" component={FamilyStack} options={{ tabBarIcon: ({ focused }) => <TabIcon Icon={isAdmin ? Users : Gem} label={isAdmin ? "Admin Workplace" : "Premium"} focused={focused} /> }} />
+      <Tab.Screen name="FamilyTab" component={FamilyStack} options={{ tabBarIcon: ({ focused }) => <TabIcon Icon={isSuper ? Users : Gem} label={isSuper ? "Admin Workplace" : "Premium"} focused={focused} /> }} />
       <Tab.Screen name="ProfileTab" component={ProfileStack} options={{ tabBarIcon: ({ focused }) => <TabIcon Icon={UserRound} label="Profile" focused={focused} /> }} />
     </Tab.Navigator>
   );
@@ -346,20 +364,27 @@ export default function UserTabNavigator() {
 
 const tabStyles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#06080D',
-    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(10, 14, 23, 0.94)',
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
     borderTopWidth: 1,
-    height: 68,
-    paddingBottom: 6,
     paddingTop: 8,
+    elevation: 8,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    ...(Platform.OS === 'web' ? {
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+    } : {}),
   },
-  iconWrap: { alignItems: 'center', justifyContent: 'center', gap: 3 },
-  label: { fontSize: 11, letterSpacing: 0.3 },
+  iconWrap: { alignItems: 'center', justifyContent: 'center', minWidth: 70, gap: 2 },
+  label: { fontSize: 10, letterSpacing: 0.1, marginTop: 1, textAlign: 'center' },
   activeIndicator: { 
-    width: 28, 
-    height: 3.5, 
-    borderRadius: 2, 
-    marginTop: 3, 
+    width: 20, 
+    height: 3, 
+    borderRadius: 1.5, 
+    marginTop: 2, 
     backgroundColor: 'transparent' 
   },
   activeIndicatorFocused: {
@@ -367,8 +392,8 @@ const tabStyles = StyleSheet.create({
     shadowColor: '#F59E0B',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
-    shadowRadius: 6,
-    elevation: 3,
-    boxShadow: '0 0 10px rgba(245, 158, 11, 0.8)',
+    shadowRadius: 5,
+    elevation: 2,
+    ...(Platform.OS === 'web' ? { boxShadow: '0 0 8px rgba(245, 158, 11, 0.8)' } : {}),
   },
 });

@@ -133,7 +133,7 @@ export default function UserDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   center: { justifyContent: 'center', alignItems: 'center' },
   scroll: { padding: 24, paddingBottom: 48 },
   card: {

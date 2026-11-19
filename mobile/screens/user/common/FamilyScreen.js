@@ -315,7 +315,7 @@ export default function FamilyScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   scroll: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32 },
   sectionTitle: { 
     fontSize: 11, 

@@ -121,9 +121,7 @@ export default function WalletCategoryScreen({ route, navigation }) {
     <SafeAreaView style={s.safe}>
       <ParticleBackground />
       <View style={s.header}>
-        <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 28 }} />
         <Text style={s.headerTitle}>{title}</Text>
         <TouchableOpacity style={s.addBtn} onPress={() => navigation.navigate('WalletAddEdit', { category, title })}>
           <Plus color={C.white} size={24} />
@@ -157,7 +155,7 @@ export default function WalletCategoryScreen({ route, navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: { 
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,

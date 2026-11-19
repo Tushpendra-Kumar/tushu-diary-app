@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Switch, TextInput, Modal, Platform, Alert } from 'react-native';
 import { C } from '../../../constants/theme';
-import { ChevronLeft, ShieldAlert, KeyRound, Fingerprint, Clock, EyeOff, Save, Trash2 } from 'lucide-react-native';
+import { ChevronLeft, ShieldAlert, KeyRound, Fingerprint, Clock, EyeOff, Save, Trash2, Lock } from 'lucide-react-native';
 import { AuthContext } from '../../../context/AuthContext';
 import { AppLockContext } from '../../../context/AppLockContext';
 import ParticleBackground from '../../../components/ParticleBackground';
@@ -154,9 +154,7 @@ export default function AppLockSettingsScreen({ navigation }) {
     <SafeAreaView style={s.safe}>
       <ParticleBackground />
       <View style={s.header}>
-        <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 28 }} />
         <Text style={s.headerTitle}>App Lock & Privacy</Text>
         <View style={{ width: 28 }} />
       </View>
@@ -381,7 +379,7 @@ export default function AppLockSettingsScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: { 
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 12,

@@ -135,9 +135,7 @@ export default function AdvancedHomeDashboardScreen({ navigation }) {
       <SafeAreaView style={s.safe}>
         <ParticleBackground />
         <View style={s.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-            <ChevronLeft color={C.white} size={28} />
-          </TouchableOpacity>
+          <View style={{ width: 32 }} />
           <Text style={s.headerTitle}>Home Dashboard</Text>
           <View style={{ width: 32 }} />
         </View>
@@ -160,9 +158,7 @@ export default function AdvancedHomeDashboardScreen({ navigation }) {
 
       {/* ── HEADER ── */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft color={C.white} size={28} />
-        </TouchableOpacity>
+        <View style={{ width: 28 }} />
         <Text style={s.headerTitle}>Home Dashboard</Text>
         <TouchableOpacity onPress={() => setShowCustomize(!showCustomize)} style={s.backBtn}>
           <Layers color={C.gold} size={22} />
@@ -452,7 +448,7 @@ export default function AdvancedHomeDashboardScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 16, paddingVertical: 14,

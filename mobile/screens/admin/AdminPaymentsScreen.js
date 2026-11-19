@@ -75,9 +75,7 @@ export default function AdminPaymentsScreen({ navigation }) {
 
       {/* Top Bar */}
       <View style={s.topBar}>
-        <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()} activeOpacity={0.7}>
-          <ArrowLeft size={20} color={C.white} />
-        </TouchableOpacity>
+        <View style={{ width: 40 }} />
         <View style={s.topBarTitles}>
           <Text style={s.headerTitle}>Payments & Subscriptions</Text>
           <Text style={s.headerSubtitle}>Lifetime Premium User Records & Revenue</Text>

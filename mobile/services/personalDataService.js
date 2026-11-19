@@ -146,44 +146,80 @@ export const toggleShoppingItem = async (userId, listId, itemId) => {
 };
 
 // â”€â”€â”€ KHATA ENTRIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-export const getKhataContacts = (userId) => getAll(userId, 'khata');
+export const getKhataContacts = async (userId) => {
+  const data = await getAll(userId, 'khata');
+  return Array.isArray(data) ? data : [];
+};
 
 export const addKhataContact = async (userId, name) => {
   const contacts = await getKhataContacts(userId);
-  const newContact = { id: uuid(), name, entries: [], createdAt: new Date().toISOString() };
-  await saveAll(userId, 'khata', [newContact, ...contacts]);
+  const cleanName = (name || '').trim();
+  const newContact = { 
+    id: uuid(), 
+    name: cleanName, 
+    entries: [], 
+    createdAt: new Date().toISOString() 
+  };
+  const list = Array.isArray(contacts) ? contacts : [];
+  await saveAll(userId, 'khata', [newContact, ...list]);
   return newContact;
 };
 
 export const addKhataEntry = async (userId, contactId, entry) => {
   const contacts = await getKhataContacts(userId);
-  const newEntry = { id: uuid(), date: new Date().toISOString().split('T')[0], ...entry };
-  const updated = contacts.map(c => c.id === contactId
-    ? { ...c, entries: [newEntry, ...c.entries] }
+  const newEntry = { 
+    id: uuid(), 
+    date: new Date().toISOString().split('T')[0], 
+    amount: Number(entry.amount) || 0,
+    type: entry.type === 'gave' ? 'gave' : 'received',
+    note: entry.note || '',
+    ...entry 
+  };
+  const list = Array.isArray(contacts) ? contacts : [];
+  const updated = list.map(c => c.id === contactId
+    ? { ...c, entries: [newEntry, ...(Array.isArray(c.entries) ? c.entries : [])] }
     : c);
   await saveAll(userId, 'khata', updated);
-  notifService.scheduleKhataReminders(updated.find(c => c.id === contactId));
+  try {
+    const target = updated.find(c => c.id === contactId);
+    if (target) notifService.scheduleKhataReminders(target);
+  } catch (e) {
+    console.warn('[Khata] Reminder scheduling error:', e);
+  }
+  return newEntry;
 };
 
 export const deleteKhataEntry = async (userId, contactId, entryId) => {
   const contacts = await getKhataContacts(userId);
-  const updated = contacts.map(c => c.id === contactId
-    ? { ...c, entries: c.entries.filter(e => e.id !== entryId) }
+  const list = Array.isArray(contacts) ? contacts : [];
+  const updated = list.map(c => c.id === contactId
+    ? { ...c, entries: (Array.isArray(c.entries) ? c.entries : []).filter(e => e.id !== entryId) }
     : c);
   await saveAll(userId, 'khata', updated);
-  notifService.scheduleKhataReminders(updated.find(c => c.id === contactId));
+  try {
+    const target = updated.find(c => c.id === contactId);
+    if (target) notifService.scheduleKhataReminders(target);
+  } catch (e) {
+    console.warn('[Khata] Reminder update error:', e);
+  }
 };
 
 export const deleteKhataContact = async (userId, contactId) => {
   const contacts = await getKhataContacts(userId);
-  await saveAll(userId, 'khata', contacts.filter(c => c.id !== contactId));
-  notifService.cancelKhataReminders(contactId);
+  const list = Array.isArray(contacts) ? contacts : [];
+  await saveAll(userId, 'khata', list.filter(c => c.id !== contactId));
+  try {
+    notifService.cancelKhataReminders(contactId);
+  } catch (e) {}
 };
 
 export const getKhataBalance = (contact) => {
+  if (!contact || !Array.isArray(contact.entries)) return 0;
   let balance = 0;
   for (const e of contact.entries) {
-    balance += e.type === 'gave' ? -e.amount : e.amount; // gave = I gave them (they owe me), received = I received (I owe them)
+    if (!e) continue;
+    const amt = Number(e.amount) || 0;
+    balance += e.type === 'gave' ? -amt : amt;
   }
   return balance;
 };

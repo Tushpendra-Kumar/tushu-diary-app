@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image, TextInput, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Image, TextInput, Platform, Alert, useWindowDimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../context/AuthContext';
 import SecurityFooter from '../../components/SecurityFooter';
@@ -35,7 +35,7 @@ const SolidGoldBookIcon = ({ size = 32 }) => (
 import { 
   CheckSquare, Briefcase, Wallet, PieChart, ShoppingCart, Car, 
   ReceiptText, PiggyBank, Target, Heart, BookOpen, Pill, 
-  PartyPopper, Gift, Bell, Edit3, FileText, BookMarked, ChevronRight, Search, X 
+  PartyPopper, Gift, Bell, Edit3, FileText, BookMarked, ChevronRight, Search, X, Sparkles 
 } from 'lucide-react-native';
 import ParticleBackground from '../../components/ParticleBackground';
 
@@ -49,7 +49,8 @@ const getGreeting = () => {
 import { APP_MODULES as modules } from '../../config/modulesConfig';
 
 export default function PublicHomeScreen({ navigation }) {
-  const { user } = useContext(AuthContext);
+  const { user, switchMode } = useContext(AuthContext);
+  const isSuper = (user?.email || '').toLowerCase().trim() === 'tushpendrakumar@gmail.com';
   const userId = user?.user_id;
   const [displayName, setDisplayName] = useState(user?.full_name || '');
   const [dpUri, setDpUri] = useState(null);
@@ -78,6 +79,11 @@ export default function PublicHomeScreen({ navigation }) {
   }, [userId]);
 
   const name = displayName || user?.full_name || 'User';
+
+  const { width: screenWidth } = useWindowDimensions();
+  const GRID_H_PADDING = 16;
+  const CARD_GAP = 12;
+  const cardWidth = Math.max(140, (screenWidth - (GRID_H_PADDING * 2) - CARD_GAP) / 2);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -116,6 +122,38 @@ export default function PublicHomeScreen({ navigation }) {
             <Text style={s.sub}>@{((user?.user_id || 'user').includes('privaterelay') || (user?.user_id || '').includes('@')) ? ((user?.full_name || user?.user_id || 'user').toLowerCase().replace(/[^a-z0-9]/g, '')) : (user?.user_id || 'user').replace(/^@+/, '')}</Text>
           </View>
         </View>
+
+        {/* ── Super Admin Access Pill (Visible ONLY to tushpendrakumar@gmail.com) ── */}
+        {isSuper && (
+          <TouchableOpacity 
+            style={s.superAdminCard}
+            activeOpacity={0.82}
+            onPress={() => {
+              Alert.alert(
+                'Super Admin Verification',
+                'Authorized: tushpendrakumar@gmail.com\n\nDo you want to switch to Admin Portal?',
+                [
+                  { text: 'Stay in User Mode', style: 'cancel' },
+                  { text: 'Enter Admin Portal', onPress: () => switchMode('ADMIN') }
+                ]
+              );
+            }}
+          >
+            <View style={s.superAdminLeft}>
+              <View style={s.superAdminIconWrap}>
+                <Sparkles size={16} color="#FBBF24" />
+              </View>
+              <View>
+                <Text style={s.superAdminTitle}>Super Admin Access</Text>
+                <Text style={s.superAdminSub}>Tap to open Admin Portal & Reports Hub</Text>
+              </View>
+            </View>
+            <View style={s.superAdminActionBadge}>
+              <Text style={s.superAdminActionText}>Admin Mode</Text>
+              <ChevronRight size={14} color="#000000" strokeWidth={2.4} />
+            </View>
+          </TouchableOpacity>
+        )}
 
         {/* Khata is always accessible to public users */}
         <TouchableOpacity style={s.khataCard} onPress={() => navigation.navigate('KhataBook')} activeOpacity={0.85}>
@@ -186,7 +224,10 @@ export default function PublicHomeScreen({ navigation }) {
           )}
         </View>
 
-        <Text style={s.sectionTitle}>EXPLORE YOUR STUFF</Text>
+        <View style={s.sectionHeaderRow}>
+          <Text style={s.sectionHeader}>PERSONAL WORKSPACE</Text>
+          <View style={s.sectionLine} />
+        </View>
 
         {filteredModules.length === 0 ? (
           <View style={s.emptyState}>
@@ -196,29 +237,39 @@ export default function PublicHomeScreen({ navigation }) {
         ) : (
           <View style={isCompactHome ? s.list : s.grid}>
             {filteredModules.map((m, i) => (
-              <TouchableOpacity key={i} style={cardStyle} onPress={() => navigation.navigate(m.route)} activeOpacity={0.75}>
+              <TouchableOpacity 
+                key={i} 
+                style={[
+                  cardStyle,
+                  !isCompactHome && { width: cardWidth, borderColor: m.color + '40', shadowColor: m.color }
+                ]} 
+                onPress={() => navigation.navigate(m.route)} 
+                activeOpacity={0.78}
+              >
                 {isCompactHome ? (
                   <>
-                    <View style={[cardIconBgStyle, { backgroundColor: m.color + '18', borderColor: m.color + '30' }]}>
+                    <View style={[cardIconBgStyle, { backgroundColor: m.color + '18', borderColor: m.color + '45' }]}>
                       <m.icon size={18} color={m.color} />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={[s.cardLabel, { fontSize: Math.round(13.5 * textScale) }]} numberOfLines={1}>{m.label}</Text>
-                      <Text style={[s.cardSub, { fontSize: Math.round(11 * textScale) }]} numberOfLines={1}>{m.sub}</Text>
+                      <Text style={[s.moduleTitle, { fontSize: Math.round(14 * textScale) }]} numberOfLines={1}>{m.label}</Text>
+                      <Text style={[s.moduleSub, { fontSize: Math.round(11 * textScale) }]} numberOfLines={1}>{m.sub}</Text>
                     </View>
-                    <ChevronRight size={16} color="rgba(255, 255, 255, 0.35)" />
+                    <ChevronRight size={16} color="rgba(255, 255, 255, 0.45)" />
                   </>
                 ) : (
                   <View style={s.cardInner}>
                     <View style={s.cardTopRow}>
-                      <View style={[cardIconBgStyle, { backgroundColor: m.color + '18', borderColor: m.color + '30' }]}>
-                        <m.icon size={22} color={m.color} />
+                      <View style={[cardIconBgStyle, { backgroundColor: m.color + '18', borderColor: m.color + '45' }]}>
+                        <m.icon size={22} color={m.color} strokeWidth={2.0} />
                       </View>
-                      <ChevronRight size={16} color="rgba(255, 255, 255, 0.35)" style={{ marginTop: 2 }} />
+                      <View style={s.chevronBadge}>
+                        <ChevronRight size={14} color="rgba(255, 255, 255, 0.45)" strokeWidth={2.4} />
+                      </View>
                     </View>
-                    <View style={{ marginTop: 12 }}>
-                      <Text style={[s.cardLabel, { fontSize: Math.round(13.5 * textScale) }]} numberOfLines={1}>{m.label}</Text>
-                      <Text style={[s.cardSub, { fontSize: Math.round(11 * textScale) }]} numberOfLines={1}>{m.sub}</Text>
+                    <View style={s.cardBottom}>
+                      <Text style={[s.moduleTitle, { fontSize: Math.round(14.5 * textScale) }]} numberOfLines={1}>{m.label}</Text>
+                      <Text style={[s.moduleSub, { fontSize: Math.round(11.5 * textScale) }]} numberOfLines={1}>{m.sub}</Text>
                     </View>
                   </View>
                 )}
@@ -235,7 +286,40 @@ export default function PublicHomeScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
+  superAdminCard: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    padding: 14,
+    borderRadius: 16,
+    backgroundColor: 'rgba(251, 191, 36, 0.12)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(251, 191, 36, 0.45)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  superAdminLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  superAdminIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(251, 191, 36, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  superAdminTitle: { color: '#FBBF24', fontSize: 14, fontWeight: '700' },
+  superAdminSub: { color: 'rgba(255, 255, 255, 0.65)', fontSize: 11, marginTop: 1 },
+  superAdminActionBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FBBF24',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    gap: 4,
+  },
+  superAdminActionText: { color: '#000000', fontSize: 12, fontWeight: '800' },
   scroll: { paddingBottom: 32 },
   greetingSection: {
     flexDirection: 'row', alignItems: 'center',
@@ -332,16 +416,33 @@ const s = StyleSheet.create({
       boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
     } : {}),
   },
-  sectionTitle: {
-    fontSize: 11, fontWeight: '800', color: '#8E8E93',
-    letterSpacing: 1.8, paddingHorizontal: 20, paddingTop: 24, paddingBottom: 14,
+  // ── Section Header Matching AdminHomeScreen ──
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginTop: 22,
+    marginBottom: 14,
+  },
+  sectionHeader: { 
+    color: '#8A99AC', 
+    fontSize: 11, 
+    fontWeight: '700', 
+    letterSpacing: 1.8, 
+    textTransform: 'uppercase',
+    marginRight: 12,
+  },
+  sectionLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   searchContainer: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.035)',
-    marginHorizontal: 20, marginTop: 12, marginBottom: 8,
-    borderRadius: 14, paddingHorizontal: 16, height: 50,
-    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.09)',
+    marginHorizontal: 16, marginTop: 14, marginBottom: 6,
+    borderRadius: 14, paddingHorizontal: 16, height: 48,
+    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   searchContainerFocused: {
     borderColor: 'rgba(240, 165, 0, 0.75)',
@@ -353,32 +454,58 @@ const s = StyleSheet.create({
   },
   emptyState: {
     alignItems: 'center', justifyContent: 'center',
-    paddingVertical: 40, marginHorizontal: 20,
-    backgroundColor: C.card, borderRadius: 16,
-    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.07)',
+    paddingVertical: 40, marginHorizontal: 16,
+    backgroundColor: 'rgba(14, 17, 24, 0.94)', borderRadius: 18,
+    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   emptyTitle: { color: C.white, fontSize: 16, fontWeight: '700', marginBottom: 6 },
   emptySub: { color: '#8E8E93', fontSize: 13, textAlign: 'center', paddingHorizontal: 20 },
   grid: {
     flexDirection: 'row', flexWrap: 'wrap',
     justifyContent: 'space-between', paddingHorizontal: 16,
+    rowGap: 12,
   },
   list: { flexDirection: 'column', paddingHorizontal: 16, gap: 10 },
   card: {
-    width: '48%',
-    backgroundColor: 'rgba(255, 255, 255, 0.035)',
-    borderRadius: 16, padding: 15,
-    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.08)',
-    marginBottom: 12,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15, shadowRadius: 6, elevation: 2,
+    borderRadius: 18,
+    padding: 14,
+    borderWidth: 1.2,
+    backgroundColor: 'rgba(14, 17, 24, 0.94)',
+    overflow: 'hidden',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 4,
   },
   cardInner: { flex: 1, justifyContent: 'space-between' },
-  cardTopRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' },
+  cardTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   cardIconBg: {
-    width: 44, height: 44, borderRadius: 13, borderWidth: 1,
+    width: 44, height: 44, borderRadius: 12, borderWidth: 1,
     justifyContent: 'center', alignItems: 'center',
   },
-  cardLabel: { fontSize: 13.5, fontWeight: '700', color: C.white, letterSpacing: 0.2, marginBottom: 3 },
-  cardSub: { fontSize: 11, fontWeight: '500', color: '#8E8E93', lineHeight: 15 },
+  chevronBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardBottom: {
+    marginTop: 12,
+  },
+  moduleTitle: { 
+    color: '#FFFFFF', 
+    fontSize: 14.5, 
+    fontWeight: '700', 
+    letterSpacing: 0.2,
+    marginBottom: 2,
+    textAlign: 'left',
+  },
+  moduleSub: { 
+    color: '#8E9BAE', 
+    fontSize: 11.5, 
+    fontWeight: '400',
+    textAlign: 'left',
+  },
 });

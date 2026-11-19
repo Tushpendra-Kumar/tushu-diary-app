@@ -388,7 +388,7 @@ export default function MyMusicAdvancedScreen({ navigation }) {
 
       {/* HEADER */}
       <View style={s.header}>
-        <TouchableOpacity onPress={()=>navigation.goBack()} style={s.backBtn}><ChevronLeft color={C.white} size={28}/></TouchableOpacity>
+        <View style={{width:28}}/>
         <Text style={s.headerTitle}>My Music — Advanced</Text>
         <View style={{flexDirection:'row',gap:4}}>
           <TouchableOpacity style={s.headerIconBtn} onPress={()=>setPlaylistModal(true)}><List color={C.gold} size={22}/></TouchableOpacity>
@@ -497,7 +497,7 @@ export default function MyMusicAdvancedScreen({ navigation }) {
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const s = StyleSheet.create({
-  safe:{flex:1,backgroundColor:'transparent'},
+  safe:{flex:1,backgroundColor:'#06080D'},
   header:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:16,paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.border,backgroundColor:'rgba(5,5,5,0.9)'},
   headerTitle:{fontSize:16,fontWeight:'700',color:C.white,flex:1,textAlign:'center'},
   backBtn:{padding:4}, headerIconBtn:{padding:4},

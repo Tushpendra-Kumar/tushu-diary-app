@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { C } from '../constants/theme';
 import { Feather } from '@expo/vector-icons';
 
@@ -42,13 +42,13 @@ const styles = StyleSheet.create({
     minWidth: '30%',
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.05)',
-    boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.4)',
+    ...(Platform.OS === 'web' ? { boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.4)' } : {}),
     elevation: 3,
   },
   cardTotal: {
     borderColor: 'rgba(240, 165, 0, 0.3)',
     backgroundColor: 'rgba(240, 165, 0, 0.05)',
-    boxShadow: '0px 0px 20px rgba(240, 165, 0, 0.15)',
+    ...(Platform.OS === 'web' ? { boxShadow: '0px 0px 20px rgba(240, 165, 0, 0.15)' } : {}),
   },
   iconContainer: {
     width: 48,

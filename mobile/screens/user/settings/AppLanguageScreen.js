@@ -29,7 +29,7 @@ export default function AppLanguageScreen() {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   content: { padding: 20 },
   sectionTitle: { color: C.textSecondary, fontSize: 12, fontWeight: '700', marginBottom: 16, letterSpacing: 1, textTransform: 'uppercase' },
   languageCard: { backgroundColor: C.card, borderRadius: 12, borderWidth: 1, borderColor: C.border, overflow: 'hidden' },

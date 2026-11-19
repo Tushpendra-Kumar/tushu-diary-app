@@ -318,7 +318,7 @@ export default function MonthlyBudgetScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'transparent' },
+  container: { flex: 1, backgroundColor: '#06080D' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 16, borderBottomWidth: 1, borderBottomColor: C.border },
   backBtn: { color: C.gold, fontSize: 16 },
   title: { color: C.white, fontSize: 18, fontWeight: 'bold' },

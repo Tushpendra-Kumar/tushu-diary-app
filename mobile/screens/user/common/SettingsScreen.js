@@ -7,8 +7,10 @@ import * as dataService from '../../../services/personalDataService';
 import { C } from '../../../constants/theme';
 import { 
   User, Camera, Pencil, Bell, ShieldCheck, Lock, KeyRound, Users, Calendar, Wallet, Database, HardDrive, Languages, 
-  HelpCircle, Info, Settings, UserCog, UserRoundCog, Shield, ClipboardList, LogOut, ChevronRight, BookMarked, MessageSquare, FolderGit2, CreditCard, Gem
+  HelpCircle, Info, Settings, UserCog, UserRoundCog, Shield, ClipboardList, LogOut, ChevronRight, BookMarked, MessageSquare, FolderGit2, CreditCard, Gem,
+  DownloadCloud
 } from 'lucide-react-native';
+import { checkForAppUpdates, CURRENT_VERSION } from '../../../services/updateService';
 import SecurityFooter from '../../../components/SecurityFooter';
 import ParticleBackground from '../../../components/ParticleBackground';
 
@@ -171,6 +173,16 @@ export default function SettingsScreen({ navigation }) {
           <SettingRow icon={User} title="Contact Admin" desc="Reach out to your family admin" onPress={() => navTo('ContactAdmin')} />
         </View>
 
+        <SectionTitle title="APP UPDATES & VERSION" />
+        <View style={s.card}>
+          <SettingRow 
+            icon={DownloadCloud} 
+            title="Check for Updates" 
+            desc={`Version v${CURRENT_VERSION} • Tap to check latest release`} 
+            onPress={() => checkForAppUpdates({ showAlert: true })} 
+          />
+        </View>
+
         <SectionTitle title="ABOUT APP" />
         <View style={s.card}>
           <SettingRow icon={Info} title="Terms of Service" onPress={() => navTo('TermsOfService')} />
@@ -182,7 +194,7 @@ export default function SettingsScreen({ navigation }) {
             <View style={{ marginLeft: 16 }}>
               <Text style={s.aboutTitle}>TushuDiary</Text>
               <Text style={s.aboutDesc}>Your Life, Your Diary.</Text>
-              <Text style={s.aboutPowered}>Provided by CodeByTushu • v2.0</Text>
+              <Text style={s.aboutPowered}>CodeByTushu • v{CURRENT_VERSION}</Text>
             </View>
           </View>
         </View>
@@ -267,7 +279,7 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   scroll: { padding: 16, paddingBottom: 40 },
   sectionTitle: { fontSize: 11, fontWeight: '700', color: C.textMuted, letterSpacing: 1.5, marginLeft: 8, marginBottom: 8, marginTop: 24 },
   card: { backgroundColor: C.card, borderRadius: 16, borderWidth: 1, borderColor: C.border, overflow: 'hidden' },

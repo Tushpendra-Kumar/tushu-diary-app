@@ -19,10 +19,6 @@ export default function ComingSoonScreen({ route, navigation }) {
           <Text style={s.badgeText}>🚧 Coming Soon</Text>
         </View>
         <Text style={s.hint}>This feature is being built and will be available in the next update.</Text>
-        <TouchableOpacity style={s.backHomeBtn} onPress={() => navigation.goBack()}>
-          <ArrowLeft size={16} color={C.gold} style={{ marginRight: 8 }} />
-          <Text style={s.backHomeBtnText}>Go Back</Text>
-        </TouchableOpacity>
       </View>
       <SecurityFooter />
     </SafeAreaView>
@@ -30,7 +26,7 @@ export default function ComingSoonScreen({ route, navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   content: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
   title: { fontSize: 22, fontWeight: '800', color: C.white, marginBottom: 12, textAlign: 'center' },
   desc: { fontSize: 14, color: C.textSecondary, textAlign: 'center', lineHeight: 22, marginBottom: 24 },

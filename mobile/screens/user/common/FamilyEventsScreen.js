@@ -171,10 +171,7 @@ export default function FamilyEventsScreen({ navigation }) {
       
       {/* Header */}
       <View style={s.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <ChevronLeft size={24} color={C.gold} />
-          <Text style={{ color: C.gold, fontSize: 16 }}>Back</Text>
-        </TouchableOpacity>
+        <View style={{ width: 48 }} />
         <Text style={s.headerTitle}>Family Events</Text>
         <TouchableOpacity style={s.addBtnTop} onPress={openAddModal}>
           <Text style={s.addBtnTextTop}>+ Add</Text>
@@ -275,7 +272,7 @@ export default function FamilyEventsScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: 'transparent' },
+  safe: { flex: 1, backgroundColor: '#06080D' },
   header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 54, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: C.border },
   backBtn: { padding: 4, marginRight: 8, flexDirection: 'row', alignItems: 'center' },
   headerTitle: { flex: 1, fontSize: 18, fontWeight: '800', color: C.white, textAlign: 'center' },

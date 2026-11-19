@@ -4,18 +4,17 @@ import { View, Animated, StyleSheet, Dimensions } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
-const PARTICLE_COUNT = 20;
+const PARTICLE_COUNT = 8;
 
 const Particle = ({ reduceMotion }) => {
   const x = useRef(new Animated.Value(Math.random() * width)).current;
   const y = useRef(new Animated.Value(Math.random() * height)).current;
-  const opacity = useRef(new Animated.Value(Math.random() * 0.5 + 0.1)).current;
-  const scale = useRef(new Animated.Value(Math.random() * 1.5 + 0.5)).current;
+  const opacity = useRef(new Animated.Value(Math.random() * 0.4 + 0.1)).current;
+  const scale = useRef(new Animated.Value(Math.random() * 1.2 + 0.5)).current;
   const animRef = useRef(null);
 
   useEffect(() => {
     if (reduceMotion) {
-      // Stop any running animation — just keep static position
       if (animRef.current) animRef.current.stop();
       return;
     }
@@ -24,24 +23,24 @@ const Particle = ({ reduceMotion }) => {
       const anim = Animated.parallel([
         Animated.timing(x, {
           toValue: Math.random() * width,
-          duration: Math.random() * 15000 + 15000,
-          useNativeDriver: false,
+          duration: Math.random() * 14000 + 14000,
+          useNativeDriver: true,
         }),
         Animated.timing(y, {
           toValue: Math.random() * height,
-          duration: Math.random() * 15000 + 15000,
-          useNativeDriver: false,
+          duration: Math.random() * 14000 + 14000,
+          useNativeDriver: true,
         }),
         Animated.sequence([
           Animated.timing(opacity, {
-            toValue: Math.random() * 0.6 + 0.2,
+            toValue: Math.random() * 0.5 + 0.2,
             duration: Math.random() * 4000 + 2000,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
           Animated.timing(opacity, {
-            toValue: Math.random() * 0.3 + 0.1,
+            toValue: Math.random() * 0.25 + 0.1,
             duration: Math.random() * 4000 + 2000,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }),
         ]),
       ]);
@@ -70,14 +69,14 @@ const Particle = ({ reduceMotion }) => {
   );
 };
 
-export default function ParticleBackground() {
+function ParticleBackground() {
   const themeCtx = useContext(ThemeContext);
   const prefs = themeCtx?.prefs;
 
   // If reduceEffects is on — render minimal static background only
   if (prefs?.reduceEffects) {
     return (
-      <View style={[styles.container, { pointerEvents: 'none' }]}>
+      <View pointerEvents="none" style={styles.container}>
         <View style={styles.base} />
       </View>
     );
@@ -89,14 +88,14 @@ export default function ParticleBackground() {
   ));
 
   return (
-    <View style={[styles.container, { pointerEvents: 'none' }]}>
+    <View pointerEvents="none" style={styles.container}>
       {/* Background Base */}
-      <View style={styles.base} />
+      <View style={styles.base} pointerEvents="none" />
 
       {/* Large Curved Orbital Lines */}
-      <View style={[styles.orbitalLine, styles.orbitalLine1]} />
-      <View style={[styles.orbitalLine, styles.orbitalLine2]} />
-      <View style={[styles.orbitalLine, styles.orbitalLine3]} />
+      <View style={[styles.orbitalLine, styles.orbitalLine1]} pointerEvents="none" />
+      <View style={[styles.orbitalLine, styles.orbitalLine2]} pointerEvents="none" />
+      <View style={[styles.orbitalLine, styles.orbitalLine3]} pointerEvents="none" />
 
       {/* Particles */}
       {particles}
@@ -104,10 +103,12 @@ export default function ParticleBackground() {
   );
 }
 
+export default React.memo(ParticleBackground);
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#050505',
+    backgroundColor: '#06080D',
     overflow: 'hidden',
     zIndex: -1,
   },

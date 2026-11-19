@@ -196,9 +196,7 @@ export default function AdvancedBackupSyncScreen({ navigation }) {
             <ParticleBackground />
             
             <View style={s.header}>
-                <TouchableOpacity style={s.backBtn} onPress={() => navigation.goBack()}>
-                    <ChevronLeft color={C.white} size={28} />
-                </TouchableOpacity>
+                <View style={{ width: 28 }} />
                 <Text style={s.headerTitle}>Advanced Backup & Sync</Text>
                 <View style={{ width: 28 }} />
             </View>
@@ -426,7 +424,7 @@ export default function AdvancedBackupSyncScreen({ navigation }) {
 }
 
 const s = StyleSheet.create({
-    safe: { flex: 1, backgroundColor: 'transparent' },
+    safe: { flex: 1, backgroundColor: '#06080D' },
     header: { 
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         paddingHorizontal: 16, paddingVertical: 12,

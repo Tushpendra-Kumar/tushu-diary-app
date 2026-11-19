@@ -1,15 +1,22 @@
 import React, { useContext, useState } from 'react';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C } from '../constants/theme';
 import SecurityFooter from '../components/SecurityFooter';
 import ParticleBackground from '../components/ParticleBackground';
+import BrandLogo from '../components/BrandLogo';
+import { GoogleIcon } from '../components/SocialIcons';
 import { AuthContext } from '../context/AuthContext';
 import { performSocialAuth } from '../services/socialAuthService';
 
 export default function WelcomeScreen({ navigation }) {
   const { socialLogin } = useContext(AuthContext);
   const [socialLoading, setSocialLoading] = useState(false);
+
+  const insets = useSafeAreaInsets();
+  const topInset = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 28) : 0);
+  const bottomInset = Math.max(insets.bottom, 16);
 
   const handleSocialAuth = async (providerName) => {
     if (socialLoading) return;
@@ -22,16 +29,12 @@ export default function WelcomeScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ParticleBackground />
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: topInset + 20, paddingBottom: bottomInset }]}>
         <View style={styles.content}>
-          {/* Logo */}
-          <View style={styles.logoOuterRing}>
-            <View style={styles.logoInnerRing}>
-              <Feather name="hexagon" size={56} color={C.gold} />
-            </View>
-          </View>
+          {/* Brand Monogram T+D */}
+          <BrandLogo size={96} style={{ marginBottom: 16 }} />
 
           {/* Titles */}
           <Text style={styles.title}>TushuDiary</Text>
@@ -73,50 +76,34 @@ export default function WelcomeScreen({ navigation }) {
             <View style={styles.orLine} />
           </View>
 
-          {/* Social Provider Buttons */}
-          <View style={styles.socialRow}>
-            {/* Google */}
-            <TouchableOpacity 
-              style={[styles.socialBtn, socialLoading && { opacity: 0.6 }]} 
-              activeOpacity={0.8}
-              disabled={socialLoading}
-              onPress={() => handleSocialAuth('Google')}
-            >
-              <MaterialCommunityIcons name="google" size={22} color="#EA4335" />
-            </TouchableOpacity>
-
-            {/* Facebook */}
-            <TouchableOpacity 
-              style={[styles.socialBtn, socialLoading && { opacity: 0.6 }]} 
-              activeOpacity={0.8}
-              disabled={socialLoading}
-              onPress={() => handleSocialAuth('Facebook')}
-            >
-              <MaterialCommunityIcons name="facebook" size={24} color="#1877F2" />
-            </TouchableOpacity>
-
-            {/* GitHub */}
-            <TouchableOpacity 
-              style={[styles.socialBtn, socialLoading && { opacity: 0.6 }]} 
-              activeOpacity={0.8}
-              disabled={socialLoading}
-              onPress={() => handleSocialAuth('GitHub')}
-            >
-              <MaterialCommunityIcons name="github" size={24} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
+          {/* Google Direct Sign In */}
+          <TouchableOpacity 
+            style={[styles.googleBtn, socialLoading && { opacity: 0.6 }]} 
+            activeOpacity={0.85}
+            disabled={socialLoading}
+            onPress={() => handleSocialAuth('Google')}
+          >
+            <View style={styles.googleBtnContent}>
+              <View style={styles.googleIconBox}>
+                <GoogleIcon size={22} />
+              </View>
+              <Text style={styles.googleBtnText}>
+                {socialLoading ? 'Connecting Google...' : 'Continue with Google'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
-        <SecurityFooter style={{ marginTop: 'auto', marginBottom: 20 }} />
+        <SecurityFooter style={{ marginTop: 'auto', marginBottom: 12 }} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#06080D',
   },
   container: {
     flex: 1,
@@ -243,21 +230,29 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     letterSpacing: 0.8,
   },
-  socialRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 16,
-    marginTop: 4,
-  },
-  socialBtn: {
-    width: 52,
+  googleBtn: {
+    width: '100%',
     height: 52,
     borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 4,
+  },
+  googleBtnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleIconBox: {
+    marginRight: 12,
+  },
+  googleBtnText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });

@@ -108,7 +108,7 @@ export default function AdminDashboard({ navigation }) {
 }
 
 const styles = StyleSheet.create({
- container: { flex: 1, backgroundColor: 'transparent' },
+ container: { flex: 1, backgroundColor: '#06080D' },
  header: {
  flexDirection: 'row',
  justifyContent: 'space-between',

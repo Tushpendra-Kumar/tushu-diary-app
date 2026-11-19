@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
-import { Menu, ArrowLeft, Settings } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Menu, Settings, ChevronLeft } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../context/AuthContext';
 import { C } from '../constants/theme';
@@ -9,10 +10,14 @@ import NavigationDrawer from './NavigationDrawer';
 
 export default function AppHeader({ navigation, title, isMain, back }) {
   useThemeVersion(); // Re-renders on accent/theme changes
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, currentMode, switchMode } = useContext(AuthContext);
+  const isSuper = (user?.email || '').toLowerCase().trim() === 'tushpendrakumar@gmail.com';
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayName, setDisplayName] = useState(user?.full_name || '');
   const [dpUri, setDpUri] = useState(null);
+
+  const insets = useSafeAreaInsets();
+  const topInset = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 0);
 
   const isLady = user?.gender === 'female';
   const accentColor = isLady ? '#F06292' : '#42A5F5';
@@ -41,16 +46,18 @@ export default function AppHeader({ navigation, title, isMain, back }) {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#06080D' }}>
+    <View style={[s.headerWrapper, { paddingTop: topInset + 4 }]}>
       <View style={s.header}>
         {isMain ? (
-          <TouchableOpacity onPress={() => setDrawerVisible(true)} style={s.headerBtn}>
-            <Menu size={24} color="#FFFFFF" strokeWidth={2.2} />
+          <TouchableOpacity onPress={() => setDrawerVisible(true)} style={s.headerBtn} activeOpacity={0.7}>
+            <Menu size={22} color="#FFFFFF" strokeWidth={2.2} />
+          </TouchableOpacity>
+        ) : back ? (
+          <TouchableOpacity onPress={() => navigation.goBack()} style={s.headerBtn} activeOpacity={0.7}>
+            <ChevronLeft size={24} color="#FFFFFF" strokeWidth={2.2} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={s.headerBtn}>
-            <ArrowLeft size={24} color="#FFFFFF" strokeWidth={2.2} />
-          </TouchableOpacity>
+          <View style={s.headerBtn} />
         )}
 
         <View style={s.titleContainer}>
@@ -60,17 +67,22 @@ export default function AppHeader({ navigation, title, isMain, back }) {
           )}
         </View>
 
-        {(isMain || title === 'Profile' || title === 'My Profile') ? (
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={s.headerBtn} activeOpacity={0.7}>
-            <Settings size={22} color="#FFFFFF" strokeWidth={2.0} />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 42 }} />
-        )}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {(isMain || title === 'Profile' || title === 'My Profile') ? (
+            <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={s.headerBtn} activeOpacity={0.7}>
+              <Settings size={21} color="#FFFFFF" strokeWidth={2.0} />
+            </TouchableOpacity>
+          ) : (
+            <View style={{ width: 42 }} />
+          )}
+        </View>
       </View>
 
       <NavigationDrawer
-        isAdmin={user?.role === 'ADMIN'}
+        isAdmin={isSuper && currentMode === 'ADMIN'}
+        isSuper={isSuper}
+        currentMode={currentMode}
+        onSwitchMode={switchMode}
         visible={drawerVisible}
         onClose={() => setDrawerVisible(false)}
         dpUri={dpUri}
@@ -81,19 +93,22 @@ export default function AppHeader({ navigation, title, isMain, back }) {
         onLogout={handleLogout}
         navigation={navigation}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
+  headerWrapper: {
+    backgroundColor: '#06080D',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
+  },
   header: {
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between',
     paddingHorizontal: 16, 
     paddingVertical: 10, 
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
     backgroundColor: '#06080D',
   },
   headerBtn: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
@@ -110,6 +125,20 @@ const s = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 5,
     elevation: 2,
-    boxShadow: '0 0 8px rgba(245, 158, 11, 0.7)',
+    ...(Platform.OS === 'web' ? { boxShadow: '0 0 8px rgba(245, 158, 11, 0.7)' } : {}),
+  },
+  modeToggleBadge: {
+    backgroundColor: 'rgba(245, 158, 11, 0.14)',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.35)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    marginRight: 6,
+  },
+  modeToggleText: {
+    color: '#F59E0B',
+    fontSize: 11,
+    fontWeight: '700',
   },
 });
