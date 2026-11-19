@@ -13,6 +13,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import { AppLockProvider } from './context/AppLockContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { checkForAppUpdates } from './services/updateService';
 
 // Ignore React Native Web deprecation warnings from React Navigation
 LogBox.ignoreLogs([
@@ -155,6 +156,14 @@ class GlobalErrorBoundary extends React.Component {
 }
 
 function AppNavigator() {
+  // Background check for updates 3.5 seconds after launch (silent unless update available)
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      checkForAppUpdates({ showAlert: false }).catch(() => {});
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const { user, isLoading } = useContext(AuthContext);
 
   if (isLoading) {

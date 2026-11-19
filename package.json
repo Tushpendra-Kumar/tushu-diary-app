@@ -1,0 +1,13 @@
+{
+  "name": "tushudiary-app",
+  "version": "0.0.1",
+  "description": "TushuDiary - Personal Operating System & Companion App with Automated GitHub Updates",
+  "scripts": {
+    "bump": "node scripts/bump-version.js",
+    "publish-update": "scripts\\publish-update.bat",
+    "start": "cd mobile && npm start",
+    "android": "cd mobile && npm run android"
+  },
+  "author": "CodeByTushu <tushpendrakumar@gmail.com>",
+  "license": "UNLICENSED"
+}
