@@ -19,6 +19,7 @@ import { C, inputResetStyle } from '../constants/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SecurityFooter from '../components/SecurityFooter';
 import { GoogleIcon } from '../components/SocialIcons';
+import GoogleAuthModal from '../components/GoogleAuthModal';
 import ParticleBackground from '../components/ParticleBackground';
 import BrandLogo from '../components/BrandLogo';
 import { performSocialAuth } from '../services/socialAuthService';
@@ -82,8 +83,18 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [socialLoading, setSocialLoading] = useState(false);
+  const [googleModalVisible, setGoogleModalVisible] = useState(false);
 
   const { login, socialLogin } = useContext(AuthContext);
+
+  const handleGoogleSelect = async (profile) => {
+    setSocialLoading(true);
+    try {
+      await socialLogin(null, profile);
+    } finally {
+      setSocialLoading(false);
+    }
+  };
 
   // Load saved Email/User ID when screen mounts
   useEffect(() => {
@@ -132,6 +143,10 @@ export default function LoginScreen({ navigation }) {
   };
 
   const handleSocialAuth = async (providerName) => {
+    if (providerName === 'Google') {
+      setGoogleModalVisible(true);
+      return;
+    }
     if (socialLoading || loading) return;
     setSocialLoading(true);
     try {
@@ -271,6 +286,12 @@ export default function LoginScreen({ navigation }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <GoogleAuthModal
+        visible={googleModalVisible}
+        onClose={() => setGoogleModalVisible(false)}
+        onSelectAccount={handleGoogleSelect}
+      />
     </SafeAreaView>
   );
 }

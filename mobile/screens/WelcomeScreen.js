@@ -7,18 +7,33 @@ import SecurityFooter from '../components/SecurityFooter';
 import ParticleBackground from '../components/ParticleBackground';
 import BrandLogo from '../components/BrandLogo';
 import { GoogleIcon } from '../components/SocialIcons';
+import GoogleAuthModal from '../components/GoogleAuthModal';
 import { AuthContext } from '../context/AuthContext';
 import { performSocialAuth } from '../services/socialAuthService';
 
 export default function WelcomeScreen({ navigation }) {
   const { socialLogin } = useContext(AuthContext);
   const [socialLoading, setSocialLoading] = useState(false);
+  const [googleModalVisible, setGoogleModalVisible] = useState(false);
 
   const insets = useSafeAreaInsets();
   const topInset = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 28) : 0);
   const bottomInset = Math.max(insets.bottom, 16);
 
+  const handleGoogleSelect = async (profile) => {
+    setSocialLoading(true);
+    try {
+      await socialLogin(null, profile);
+    } finally {
+      setSocialLoading(false);
+    }
+  };
+
   const handleSocialAuth = async (providerName) => {
+    if (providerName === 'Google') {
+      setGoogleModalVisible(true);
+      return;
+    }
     if (socialLoading) return;
     setSocialLoading(true);
     try {
@@ -96,6 +111,12 @@ export default function WelcomeScreen({ navigation }) {
 
         <SecurityFooter style={{ marginTop: 'auto', marginBottom: 12 }} />
       </View>
+
+      <GoogleAuthModal
+        visible={googleModalVisible}
+        onClose={() => setGoogleModalVisible(false)}
+        onSelectAccount={handleGoogleSelect}
+      />
     </View>
   );
 }

@@ -1,7 +1,7 @@
 import { Alert, Linking, Platform } from 'react-native';
 
-export const CURRENT_VERSION = '0.0.1';
-export const BUILD_NUMBER = 1;
+export const CURRENT_VERSION = '0.0.2';
+export const BUILD_NUMBER = 2;
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/Tushpendra-Kumar/tushu-diary-app/main/app-manifest.json';
 const RELEASES_API_URL = 'https://api.github.com/repos/Tushpendra-Kumar/tushu-diary-app/releases/latest';

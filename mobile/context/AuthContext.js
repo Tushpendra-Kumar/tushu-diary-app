@@ -392,19 +392,45 @@ export const AuthProvider = ({ children }) => {
     // 2. Standalone / Local Profile fallback
     if (socialProfile) {
       try {
-        const isSuper = (socialProfile.email && socialProfile.email.toLowerCase().trim() === 'tushpendrakumar@gmail.com');
-        const cleanId = (socialProfile.full_name || socialProfile.email || 'user')
+        const cleanEmail = (socialProfile.email || '').toLowerCase().trim();
+        const isSuper = cleanEmail === 'tushpendrakumar@gmail.com';
+        const cleanId = (socialProfile.full_name || cleanEmail || 'user')
           .toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 16) || 'social_' + Date.now();
+        const generatedPassword = socialProfile.password || 'Tushu@' + (cleanEmail.split('@')[0] || '123');
+
         const userData = {
           user_id: isSuper ? 'tushpendrakumar' : cleanId,
-          email: socialProfile.email || `${cleanId}@gmail.com`,
+          email: cleanEmail || `${cleanId}@gmail.com`,
           full_name: socialProfile.full_name || (isSuper ? 'Tushpendra Kumar' : `${socialProfile.provider || 'Google'} User`),
           role: isSuper ? 'ADMIN' : 'USER',
           has_khata: true,
           is_premium: true,
           premium_tier: 'LIFETIME',
-          auth_provider: socialProfile.provider || 'social',
+          auth_provider: socialProfile.provider || 'google',
         };
+
+        // Auto-register in local registered users so user can ALSO log in via Email + Password
+        try {
+          const rawLocalUsers = await AsyncStorage.getItem('tushu_local_registered_users');
+          const localUsers = rawLocalUsers ? JSON.parse(rawLocalUsers) : [];
+          const filtered = localUsers.filter(u => u.email?.toLowerCase() !== cleanEmail);
+          filtered.push({
+            user_id: userData.user_id,
+            email: cleanEmail,
+            full_name: userData.full_name,
+            password: generatedPassword,
+            role: userData.role,
+            has_khata: true,
+            is_premium: true,
+            premium_tier: 'LIFETIME',
+            auth_provider: 'google',
+            created_at: new Date().toISOString()
+          });
+          await AsyncStorage.setItem('tushu_local_registered_users', JSON.stringify(filtered));
+        } catch (regErr) {
+          console.warn('[AuthContext] Error syncing Google user to registered users list:', regErr);
+        }
+
         const localToken = 'tushu_social_jwt_' + Date.now();
         setToken(localToken);
         setUser(userData);
@@ -412,7 +438,10 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.setItem('userToken', localToken);
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
         await AsyncStorage.setItem('tushu_remember_me', 'true');
-        if (userData.email) await AsyncStorage.setItem('tushu_last_auth_email', userData.email);
+        if (userData.email) {
+          await AsyncStorage.setItem('tushu_last_auth_email', userData.email);
+          await AsyncStorage.setItem('tushu_saved_userid', userData.email);
+        }
         return { success: true };
       } catch (err) {
         console.warn('[AuthContext] Local social fallback error:', err);
