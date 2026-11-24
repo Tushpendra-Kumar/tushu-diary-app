@@ -496,8 +496,8 @@ const s = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 8,
   },
-  upgradePriceText: { color: '#10B981', fontSize: 11, fontWeight: '900', letterSpacing: 0.8 },
-  upgradeHeroTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '900', marginBottom: 4 },
+  upgradePriceText: { color: '#10B981', fontSize: 11, fontWeight: '700', letterSpacing: 0.8 },
+  upgradeHeroTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '700', marginBottom: 4 },
   upgradeHeroSub: { color: '#A0AEC0', fontSize: 12, lineHeight: 18, marginBottom: 14 },
   upgradeHeroActionRow: {
     flexDirection: 'row',
@@ -508,7 +508,7 @@ const s = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 12,
   },
-  upgradeHeroActionText: { color: '#000000', fontSize: 13.5, fontWeight: '900' },
+  upgradeHeroActionText: { color: '#000000', fontSize: 13.5, fontWeight: '700' },
 
   // Active Lifetime Card
   lifetimeActiveCard: {

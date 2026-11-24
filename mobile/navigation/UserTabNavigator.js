@@ -364,22 +364,22 @@ export default function UserTabNavigator() {
 
 const tabStyles = StyleSheet.create({
   tabBar: {
-    backgroundColor: 'rgba(10, 14, 23, 0.94)',
+    backgroundColor: 'rgba(10, 14, 23, 0.90)',
     borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    borderTopWidth: 1,
-    paddingTop: 8,
+    borderTopWidth: 0.5,
+    paddingTop: 6,
     elevation: 8,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
+    shadowOpacity: 0.04, // Soft luxury elevation
+    shadowRadius: 16,
     ...(Platform.OS === 'web' ? {
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
     } : {}),
   },
   iconWrap: { alignItems: 'center', justifyContent: 'center', minWidth: 70, gap: 2 },
-  label: { fontSize: 10, letterSpacing: 0.1, marginTop: 1, textAlign: 'center' },
+  label: { fontSize: 10.5, letterSpacing: 0.2, marginTop: 1, textAlign: 'center', fontWeight: '500' },
   activeIndicator: { 
     width: 20, 
     height: 3, 
@@ -388,12 +388,12 @@ const tabStyles = StyleSheet.create({
     backgroundColor: 'transparent' 
   },
   activeIndicatorFocused: {
-    backgroundColor: '#F59E0B',
-    shadowColor: '#F59E0B',
+    backgroundColor: '#F0A500',
+    shadowColor: '#F0A500',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
     elevation: 2,
-    ...(Platform.OS === 'web' ? { boxShadow: '0 0 8px rgba(245, 158, 11, 0.8)' } : {}),
+    ...(Platform.OS === 'web' ? { boxShadow: '0 0 6px rgba(240, 165, 0, 0.6)' } : {}),
   },
 });

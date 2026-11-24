@@ -384,8 +384,8 @@ const s = StyleSheet.create({
     marginRight: 10,
   },
   khataTitle: { 
-    fontSize: 21.5, 
-    fontWeight: '900', 
+    fontSize: 20, 
+    fontWeight: '700', 
     color: '#F7CE46', 
     letterSpacing: -0.2,
     marginBottom: 2,

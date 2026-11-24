@@ -299,7 +299,7 @@ const s = StyleSheet.create({
     alignItems: 'center' 
   },
   totalLabel: { color: '#8E8E93', fontSize: 11, letterSpacing: 1.8, fontWeight: '800', textTransform: 'uppercase', marginBottom: 8 },
-  totalAmount: { fontSize: 36, fontWeight: '900', letterSpacing: -0.5 },
+  totalAmount: { fontSize: 32, fontWeight: '700', letterSpacing: -0.5 },
   totalSub: { color: 'rgba(255, 255, 255, 0.75)', fontSize: 13, fontWeight: '500' },
   sectionHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, paddingHorizontal: 4 },
   sectionTitle: { color: '#8E8E93', fontSize: 11, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 1.8 },

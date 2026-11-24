@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(240, 165, 0, 0.15)',
     borderWidth: 2, borderColor: C.gold, justifyContent: 'center', alignItems: 'center', marginBottom: 16,
   },
-  avatarText: { fontSize: 28, fontWeight: '900', color: C.gold },
+  avatarText: { fontSize: 26, fontWeight: '700', color: C.gold },
   name: { fontSize: 22, fontWeight: '800', color: C.white, marginBottom: 4 },
   username: { fontSize: 14, color: C.textMuted, marginBottom: 24 },
   divider: { height: 1, backgroundColor: C.border, width: '100%', marginBottom: 16 },

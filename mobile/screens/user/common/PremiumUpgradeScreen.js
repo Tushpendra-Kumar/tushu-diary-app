@@ -401,7 +401,7 @@ const s = StyleSheet.create({
   heroPlanName: {
     color: '#FFFFFF',
     fontSize: 22,
-    fontWeight: '900',
+    fontWeight: '700',
     letterSpacing: -0.3,
     marginBottom: 8,
   },
@@ -410,8 +410,8 @@ const s = StyleSheet.create({
     alignItems: 'baseline',
     marginBottom: 8,
   },
-  priceSymbol: { color: C.gold, fontSize: 24, fontWeight: '800', marginRight: 2 },
-  priceAmount: { color: '#FFFFFF', fontSize: 44, fontWeight: '900', letterSpacing: -1 },
+  priceSymbol: { color: C.gold, fontSize: 24, fontWeight: '700', marginRight: 2 },
+  priceAmount: { color: '#FFFFFF', fontSize: 40, fontWeight: '700', letterSpacing: -1 },
   oneTimePill: {
     backgroundColor: 'rgba(16, 185, 129, 0.18)',
     borderWidth: 1,
@@ -450,7 +450,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 14,
   },
-  activePremTitle: { color: '#FFFFFF', fontSize: 22, fontWeight: '900', marginBottom: 6 },
+  activePremTitle: { color: '#FFFFFF', fontSize: 22, fontWeight: '700', marginBottom: 6 },
   activePremSub: { color: '#A0AEC0', fontSize: 13, textAlign: 'center', lineHeight: 20, marginBottom: 14 },
   activePremBadge: {
     flexDirection: 'row',
@@ -625,7 +625,7 @@ const s = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
   },
-  verifyBtnText: { color: '#000000', fontSize: 14.5, fontWeight: '900', letterSpacing: 0.2 },
+  verifyBtnText: { color: '#000000', fontSize: 14.5, fontWeight: '700', letterSpacing: 0.2 },
   guaranteeRow: {
     flexDirection: 'row',
     alignItems: 'center',

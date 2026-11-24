@@ -29,6 +29,29 @@ if (Platform.OS === 'web' && typeof document !== 'undefined') {
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
+      :root {
+        --ios-bg: #06080D;
+        --surface-primary: rgba(17, 21, 30, 0.85);
+        --glass-surface: rgba(255, 255, 255, 0.85);
+        --glass-surface-dark: rgba(17, 21, 30, 0.85);
+        --glass-border: rgba(0, 0, 0, 0.06);
+        --glass-border-dark: rgba(255, 255, 255, 0.08);
+        --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        --brand-gold: #F0A500;
+        --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+        --font-card-title: 1.05rem;
+        --font-body: 0.88rem;
+        --font-secondary: 0.78rem;
+        --font-micro: 0.70rem;
+        --radius-lg: 18px;
+        --touch-target: 44px;
+      }
+      body, html {
+        font-family: var(--font-family) !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        letter-spacing: -0.012em !important;
+      }
       input, textarea, select, [contenteditable="true"], [role="textbox"], [data-focusable="true"] {
         outline: none !important;
         outline-style: none !important;

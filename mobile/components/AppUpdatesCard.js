@@ -154,11 +154,20 @@ export default function AppUpdatesCard({ style }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#11151E',
-    borderRadius: 16,
+    backgroundColor: 'rgba(17, 21, 30, 0.85)',
+    borderRadius: 18,
     padding: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 16,
+    elevation: 2,
+    ...(Platform.OS === 'web' ? {
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+    } : {}),
   },
   cardHeader: {
     flexDirection: 'row',
@@ -182,15 +191,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 16,
+    fontSize: 16.5,
     fontWeight: '700',
     color: '#FFFFFF',
-    letterSpacing: 0.2,
+    letterSpacing: -0.2,
   },
   subtitle: {
-    fontSize: 12,
-    color: '#8E8E93',
+    fontSize: 12.5,
+    color: '#636366',
     marginTop: 2,
+    fontWeight: '400',
   },
   versionPill: {
     backgroundColor: 'rgba(240, 165, 0, 0.15)',
@@ -207,8 +217,9 @@ const styles = StyleSheet.create({
   },
   checkBtn: {
     backgroundColor: '#F0A500',
-    borderRadius: 12,
+    borderRadius: 14,
     paddingVertical: 12,
+    minHeight: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },

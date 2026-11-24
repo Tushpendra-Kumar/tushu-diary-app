@@ -310,7 +310,8 @@ const s = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 11,
     paddingHorizontal: 13,
-    borderRadius: 14,
+    borderRadius: 16,
+    minHeight: 44, // Apple HIG min touch target
     backgroundColor: 'rgba(255, 255, 255, 0.035)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.07)',
@@ -365,10 +366,10 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   adminSectionLabel: {
-    fontSize: 10.5,
-    fontWeight: '800',
-    color: '#8E8E93',
-    letterSpacing: 1.8,
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#636366',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
   },
   logoutArea: {
@@ -385,7 +386,8 @@ const s = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 13,
-    borderRadius: 14,
+    borderRadius: 16,
+    minHeight: 44, // Apple HIG min touch target
     backgroundColor: 'rgba(239, 68, 68, 0.08)',
     borderWidth: 1,
     borderColor: 'rgba(239, 68, 68, 0.25)',

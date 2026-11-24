@@ -1,6 +1,6 @@
 import { Alert, Linking, Platform } from 'react-native';
 
-export const CURRENT_VERSION = '0.0.3';
+export const CURRENT_VERSION = '0.0.4';
 export const BUILD_NUMBER = 3;
 
 const MANIFEST_URL = 'https://raw.githubusercontent.com/Tushpendra-Kumar/tushu-diary-app/main/app-manifest.json';

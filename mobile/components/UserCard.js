@@ -28,15 +28,25 @@ const UserCard = ({ user, onPress }) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: C.card,
-    padding: 16,
-    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 18, // Apple squircle 16px - 20px
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: C.border,
-    ...(Platform.OS === 'web' ? { boxShadow: '0px 4px 5px rgba(0, 0, 0, 0.3)' } : {}),
-    elevation: 3,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    minHeight: 44, // Apple HIG min touch target
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 16,
+    elevation: 2,
+    ...(Platform.OS === 'web' ? { 
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)' 
+    } : {}),
   },
   avatar: {
     width: 44,
@@ -49,18 +59,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 14,
   },
-  avatarText: { fontSize: 18, fontWeight: '800', color: C.gold },
+  avatarText: { fontSize: 17, fontWeight: '700', color: C.gold },
   info: { flex: 1 },
-  name: { fontSize: 16, fontWeight: '700', color: C.white, marginBottom: 3 },
-  userId: { fontSize: 13, color: C.textSecondary },
+  name: { fontSize: 16, fontWeight: '700', color: C.white, marginBottom: 2, letterSpacing: -0.2 },
+  userId: { fontSize: 12.5, color: '#636366', fontWeight: '400' }, // Apple secondary label
   right: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   statusBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
   },
-  statusText: { fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  chevron: { fontSize: 22, color: C.gold, fontWeight: '300' },
+  statusText: { fontSize: 11, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.44 },
+  chevron: { fontSize: 20, color: C.gold, fontWeight: '400' },
 });
 
 export default UserCard;

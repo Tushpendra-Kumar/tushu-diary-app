@@ -284,7 +284,7 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 8,
   },
-  metricValue: { color: C.gold, fontSize: 24, fontWeight: '900', marginBottom: 2 },
+  metricValue: { color: C.gold, fontSize: 22, fontWeight: '700', marginBottom: 2 },
   metricLabel: { color: '#8A99AC', fontSize: 10, fontWeight: '800', letterSpacing: 1 },
 
   upiCard: {

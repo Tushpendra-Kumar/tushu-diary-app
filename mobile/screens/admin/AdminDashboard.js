@@ -119,9 +119,9 @@ const styles = StyleSheet.create({
  borderBottomWidth: 1,
  borderBottomColor: 'rgba(255, 255, 255, 0.05)',
  },
- brand: { fontSize: 11, color: C.gold, fontWeight: '800', letterSpacing: 1.5, marginBottom: 4 },
+ brand: { fontSize: 11, color: C.gold, fontWeight: '700', letterSpacing: 1.5, marginBottom: 4 },
  subtitle: { fontSize: 13, color: '#FFFFFF', marginBottom: 2 },
- appName: { fontSize: 24, fontWeight: '900', color: C.white, letterSpacing: -0.5 },
+ appName: { fontSize: 22, fontWeight: '700', color: C.white, letterSpacing: -0.4 },
  logoutBtn: {
  backgroundColor: 'rgba(20,20,20,0.8)',
  padding: 14,

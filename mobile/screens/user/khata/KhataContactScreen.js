@@ -325,7 +325,7 @@ const s = StyleSheet.create({
     elevation: 3,
   },
   balanceLabel: { color: '#8E8E93', fontSize: 11, fontWeight: '800', letterSpacing: 1.5, marginBottom: 8 },
-  balanceAmount: { fontSize: 34, fontWeight: '900', letterSpacing: -0.5 },
+  balanceAmount: { fontSize: 32, fontWeight: '700', letterSpacing: -0.5 },
   balanceSub: { color: C.textSecondary, fontSize: 13, marginTop: 6, fontWeight: '500' },
   list: { padding: 16, paddingBottom: 120 },
   entry: { 

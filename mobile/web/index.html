@@ -23,6 +23,111 @@
         flex: 1;
       }
     </style>
+    <style id="apple-ios-hig-design-system">
+      /* ===================================================
+         TushuDiary — Apple iOS Human Interface Guidelines (HIG) System
+         Typography: SF Pro Display / SF Pro Text Scale
+         Materials: Premium Frosted Glassmorphism (20px blur)
+         =================================================== */
+      :root {
+        /* Apple iOS Palette */
+        --ios-bg: #06080D;
+        --ios-bg-grouped: #11151E;
+        --surface-primary: rgba(17, 21, 30, 0.85);
+
+        /* Apple Frosted Glass Materials */
+        --glass-surface: rgba(255, 255, 255, 0.85);
+        --glass-surface-dark: rgba(17, 21, 30, 0.85);
+        --glass-border: rgba(0, 0, 0, 0.06);
+        --glass-border-dark: rgba(255, 255, 255, 0.08);
+        --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        --glass-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+        /* Brand Colors */
+        --brand-gold: #F0A500;
+        --brand-gold-dim: rgba(240, 165, 0, 0.15);
+        --brand-gold-border: rgba(240, 165, 0, 0.35);
+
+        /* Apple iOS System Accent Palette */
+        --apple-blue: #007AFF;
+        --apple-green: #34C759;
+        --apple-orange: #FF9500;
+        --apple-red: #FF3B30;
+        --apple-purple: #AF52DE;
+
+        /* Apple SF Pro Typography Hierarchy */
+        --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+        --text-primary: #FFFFFF;
+        --text-secondary: #D0D0D0;
+        --text-muted: #636366; /* Apple iOS Secondary Label */
+
+        /* Micro-Typography Scale */
+        --font-card-title: 1.05rem; /* 0.95rem - 1.1rem (700) */
+        --font-body: 0.88rem;       /* 0.85rem - 0.90rem (500) */
+        --font-secondary: 0.78rem;  /* 0.75rem - 0.78rem (#636366) */
+        --font-micro: 0.70rem;      /* 0.68rem - 0.72rem (600, uppercase) */
+
+        /* Apple Squircle Radii */
+        --radius-xs: 6px;
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 18px; /* 16px - 20px squircle */
+        --radius-xl: 24px;
+        --radius-full: 9999px;
+
+        /* Minimum Touch Target (Apple HIG) */
+        --touch-target: 44px;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html, body {
+        font-family: var(--font-family);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: -0.012em;
+        background-color: var(--ios-bg);
+      }
+
+      /* Apple Frosted Glass Card */
+      .glass-card {
+        background: var(--glass-surface-dark);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid var(--glass-border-dark);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--glass-shadow);
+      }
+
+      /* Micro-Typography Utility Classes */
+      .apple-card-title {
+        font-size: var(--font-card-title);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .apple-body {
+        font-size: var(--font-body);
+        font-weight: 500;
+        line-height: 1.42;
+      }
+
+      .apple-secondary {
+        font-size: var(--font-secondary);
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .apple-micro-tag {
+        font-size: var(--font-micro);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+    </style>
     <style id="tushudiary-global-focus-reset">
       /* Globally remove default browser white/grey focus outline & ring across all inputs */
       input, textarea, select, [contenteditable="true"], [role="textbox"], [data-focusable="true"] {
