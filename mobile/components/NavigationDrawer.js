@@ -113,8 +113,10 @@ export default function NavigationDrawer({
   };
 
   const insets = useSafeAreaInsets();
-  const topInset = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 28) : 0);
-  const bottomInset = Math.max(insets.bottom, 16);
+  // Robust Safe Area top inset for Android status bar & punch-hole cameras (avoids overlapping clock/icons)
+  const statusBarHeight = Platform.OS === 'android' ? Math.max(StatusBar.currentHeight || 0, 42) : (insets.top || 20);
+  const topInset = Math.max(insets.top || 0, statusBarHeight) + 16;
+  const bottomInset = Math.max(insets.bottom || 0, 16);
 
   const ringColor = 'rgba(240, 165, 0, 0.65)';
 
@@ -136,7 +138,7 @@ export default function NavigationDrawer({
           <View style={s.glowEdge} />
 
           <View style={{ flex: 1 }}>
-            <View style={[s.header, { paddingTop: topInset + 12 }]}>
+            <View style={[s.header, { paddingTop: topInset, paddingBottom: 16 }]}>
               <View style={s.avatarRow}>
                 {dpUri ? (
                   <RNImage source={{ uri: dpUri }} style={[s.avatarImage, { borderColor: ringColor }]} />

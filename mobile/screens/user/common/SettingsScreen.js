@@ -11,6 +11,7 @@ import {
   DownloadCloud
 } from 'lucide-react-native';
 import { checkForAppUpdates, CURRENT_VERSION } from '../../../services/updateService';
+import AppUpdatesCard from '../../../components/AppUpdatesCard';
 import SecurityFooter from '../../../components/SecurityFooter';
 import ParticleBackground from '../../../components/ParticleBackground';
 
@@ -173,15 +174,8 @@ export default function SettingsScreen({ navigation }) {
           <SettingRow icon={User} title="Contact Admin" desc="Reach out to your family admin" onPress={() => navTo('ContactAdmin')} />
         </View>
 
-        <SectionTitle title="APP UPDATES & VERSION" />
-        <View style={s.card}>
-          <SettingRow 
-            icon={DownloadCloud} 
-            title="Check for Updates" 
-            desc={`Version v${CURRENT_VERSION} • Tap to check latest release`} 
-            onPress={() => checkForAppUpdates({ showAlert: true })} 
-          />
-        </View>
+        <SectionTitle title="APP UPDATES (LIVE OTA & GITHUB RELEASES)" />
+        <AppUpdatesCard style={{ marginBottom: 16 }} />
 
         <SectionTitle title="ABOUT APP" />
         <View style={s.card}>
