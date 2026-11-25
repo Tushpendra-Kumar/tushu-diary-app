@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '../services/adminApi';
+import { createJwtToken, decodeJwtToken, isTokenExpired } from '../utils/jwt';
 
 export const isSuperAdmin = (u) => {
   if (!u) return false;
@@ -40,6 +41,15 @@ export const AuthProvider = ({ children }) => {
         }
 
         const storedToken = await AsyncStorage.getItem('userToken');
+        if (storedToken && isTokenExpired(storedToken)) {
+          console.log('[AuthContext] Stored JWT expired, clearing session.');
+          await AsyncStorage.removeItem('userToken');
+          await AsyncStorage.removeItem('userData');
+          setUser(null);
+          setToken(null);
+          setCurrentMode('USER');
+          return;
+        }
         const storedUserData = await AsyncStorage.getItem('userData');
         if (storedToken && storedUserData) {
           const parsedUser = JSON.parse(storedUserData);
@@ -173,7 +183,7 @@ export const AuthProvider = ({ children }) => {
           is_premium: true,
           premium_tier: 'LIFETIME',
         };
-        const localToken = 'tushu_master_jwt_' + Date.now();
+        const localToken = createJwtToken(adminUser);
         setToken(localToken);
         setUser(adminUser);
         setCurrentMode('ADMIN');
@@ -200,7 +210,7 @@ export const AuthProvider = ({ children }) => {
           is_premium: true,
           premium_tier: 'LIFETIME',
         };
-        const localToken = 'tushu_local_jwt_' + Date.now();
+        const localToken = createJwtToken(userData);
         setToken(localToken);
         setUser(userData);
         setCurrentMode('USER');
@@ -286,7 +296,7 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem('tushu_local_registered_users', JSON.stringify(filtered));
 
       // Set active session
-      const localToken = 'tushu_local_jwt_' + Date.now();
+      const localToken = createJwtToken(localUserData);
       setToken(localToken);
       setUser(localUserData);
       await AsyncStorage.setItem('userToken', localToken);
@@ -431,7 +441,7 @@ export const AuthProvider = ({ children }) => {
           console.warn('[AuthContext] Error syncing Google user to registered users list:', regErr);
         }
 
-        const localToken = 'tushu_social_jwt_' + Date.now();
+        const localToken = createJwtToken(userData);
         setToken(localToken);
         setUser(userData);
         setCurrentMode(isSuper ? 'ADMIN' : 'USER');
